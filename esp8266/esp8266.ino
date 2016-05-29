@@ -15,13 +15,15 @@ int16_t gx, gy, gz;
 
 WebSocketsClient webSocket;
 // Update these with values suitable for your network.
-const char* ssid = "ssid";
-const char* password = "password";
-const char* ws = "0.0.0.0"; // ip addres of nodejs server
+const char* ssid = "hackmeifucan";
+const char* password = "Bpy()[wmmt]w#j$Q}X8S58$yH^:Hx5t)cTmSAad~SR*9z";
+const char* ws = "192.168.0.3"; // ip addres of nodejs server
 
 unsigned long lastMsg = 0;
 int cont = 0;
 const long interval = 10;
+
+#define packetSize (180)
 
 void setup() {
   Serial.begin(115200);
@@ -63,6 +65,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
         Serial.println("Conectado");
       }
       break;
+    case WStype_TEXT:
+        Serial.printf("Recibi: %s\n", payload);
+      break;
   }
 }
 
@@ -72,9 +77,10 @@ void loop() {
   if (now - lastMsg >= interval) {
     lastMsg = now;
     accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-    StaticJsonBuffer<150> jsonBuffer;
+    StaticJsonBuffer<packetSize> jsonBuffer;
     JsonObject& root = jsonBuffer.createObject();
     String JSON;
+    root["ID"] = "Sensor2";
     root["accX"] = ax;
     root["accY"] = ay;
     root["accZ"] = az;
