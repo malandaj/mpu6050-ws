@@ -11,6 +11,7 @@
   "dependencies": {
     "express": "^4.13.4",
     "path": "^0.12.7",
+    "pug": "^2.0.0-alpha8",
     "ws": "^1.1.0"
   }
 }
