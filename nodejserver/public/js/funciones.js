@@ -1,4 +1,6 @@
 window.onload = function () {
+	setupWs();
+
 	var dps = []; // dataPoints
 	var chart = new CanvasJS.Chart("sensor1ChartContainer",{
 		title :{
@@ -41,4 +43,12 @@ window.onload = function () {
 
 	// update chart after specified time.
 	setInterval(function(){updateChart()}, updateInterval);
+}
+
+function setupWs(){
+	var host = window.document.location.host.replace(/:.*/, '');
+  var ws = new WebSocket('ws://' + host + ':8080');
+  ws.onmessage = function (event) {
+    console.log(event.data);
+  };
 }

@@ -19,8 +19,13 @@ app.get('/', function (req, res) {
 });
 
 wss.on('connection', function connection(ws) {
+  console.log(ws.id);
   ws.on('message', function incoming(message) {
+    //var lecture = JSON.parse(message);
     console.log('received: %s', message);
+    wss.clients.forEach(function(client) {
+      if (client !== ws) client.send(message);
+    });
   });
 });
 
