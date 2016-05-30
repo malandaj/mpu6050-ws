@@ -5,11 +5,36 @@ html(lang='en')
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    title Bootstrap Theme Example
+    meta(name='description', content='')
+    meta(name='keywords', content='')
+    meta(name='author', content='Miguel Landa')
+    title Titulo
     // Include the CSS
+    link(href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic', rel='stylesheet')
     link(href='css/toolkit.min.css', rel='stylesheet')
+    link(href='css/application.css', rel='stylesheet')
   body
-    h1 Hello, world!
+    .container
+      .row
+        .col-sm-3.sidebar
+          nav.sidebar-nav
+            .sidebar-header
+              button.nav-toggler.nav-toggler-sm.sidebar-toggler(type='button', data-toggle='collapse', data-target='#nav-toggleable-sm')
+                span.sr-only Toggle nav
+              a.sidebar-brand.img-responsive(href='#')
+                span.icon.icon-leaf.sidebar-brand-icon
+            #nav-toggleable-sm.collapse.nav-toggleable-sm
+              ul.nav.nav-pills.nav-stacked
+                li.nav-header Dashboards
+                li.active
+                  a(href='index.html') Overview
+        .col-sm-9.content
+          .dashhead
+            .dashhead-titles
+              h6.dashhead-subtitle Dashboards
+              h2.dashhead-title Overview
+          hr.m-t
+          .row.text-center.m-t-lg
     // Include jQuery (required) and the JS
     script(src='js/jquery.min.js')
     script(src='js/toolkit.min.js')
