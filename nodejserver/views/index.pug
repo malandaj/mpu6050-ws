@@ -16,7 +16,7 @@ html(lang='en')
   body
     .container
       .row
-        .col-sm-3.sidebar
+        .col-sm-2.sidebar
           nav.sidebar-nav
             .sidebar-header
               button.nav-toggler.nav-toggler-sm.sidebar-toggler(type='button', data-toggle='collapse', data-target='#nav-toggleable-sm')
@@ -28,16 +28,26 @@ html(lang='en')
                 li.nav-header Dashboards
                 li.active
                   a(href='index.html') Overview
-        .col-sm-9.content
+        .col-sm-10.content
           .dashhead
             .dashhead-titles
               h6.dashhead-subtitle Dashboards
               h2.dashhead-title Overview
           hr.m-t
           .row.text-center.m-t-lg
-            .col-sm-12.m-b-md
+            .col-sm-6.m-b-md
               .w-full.m-x-auto
-                #sensor1ChartContainer(style='height: 300px; width:100%;')
+                #sensor1Acc(style='height: 300px; width:100%;')
+            .col-sm-6.m-b-md
+              .w-full.m-x-auto
+                #sensor1Gyro(style='height: 300px; width:100%;')
+          .row.text-center.m-t-lg
+            .col-sm-6.m-b-md
+              .w-full.m-x-auto
+                #sensor2Acc(style='height: 300px; width:100%;')
+            .col-sm-6.m-b-md
+              .w-full.m-x-auto
+                #sensor2Gyro(style='height: 300px; width:100%;')
     // Include jQuery (required) and the JS
     script(src='js/jquery.min.js')
     script(src='js/toolkit.min.js')

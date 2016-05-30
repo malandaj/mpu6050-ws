@@ -18,14 +18,25 @@ app.get('/', function (req, res) {
   res.render('index');
 });
 
+var clients = [];
 wss.on('connection', function connection(ws) {
-  console.log(ws.id);
+  if(ws.protocol != "arduino"){
+    console.log("agregar navegador");
+    clients.push(ws);
+  }
+
   ws.on('message', function incoming(message) {
+    console.log(message);
     //var lecture = JSON.parse(message);
-    console.log('received: %s', message);
-    wss.clients.forEach(function(client) {
-      if (client !== ws) client.send(message);
+    //console.log('received: %s', lecture.millis);
+    clients.forEach(function(client) {
+      client.send(message);
     });
+  });
+
+  ws.on('close', function() {
+    //remove the client from clients list
+    delete clients[ws];
   });
 });
 

@@ -1,54 +1,264 @@
-window.onload = function () {
-	setupWs();
+var dpsAccXS1 = []; // dataPoints Acc Sensor1
+var dpsAccYS1 = []; // dataPoints Acc Sensor1
+var dpsAccZS1 = []; // dataPoints Acc Sensor1
+var dpsGyroXS1 = []; // dataPoints Gyro Sensor1
+var dpsGyroYS1 = []; // dataPoints Gyro Sensor1
+var dpsGyroZS1 = []; // dataPoints Gyro Sensor1
+var dpsAccXS2 = []; // dataPoints Acc Sensor1
+var dpsAccYS2 = []; // dataPoints Acc Sensor1
+var dpsAccZS2 = []; // dataPoints Acc Sensor1
+var dpsGyroXS2 = []; // dataPoints Gyro Sensor1
+var dpsGyroYS2 = []; // dataPoints Gyro Sensor1
+var dpsGyroZS2 = []; // dataPoints Gyro Sensor1
+var dataLength = 200; // number of dataPoints visible at any point
+var s1AccChart;
+var s1GyroChart;
+var s2AccChart;
+var s2GyroChart;
 
-	var dps = []; // dataPoints
-	var chart = new CanvasJS.Chart("sensor1ChartContainer",{
-		title :{
-			text: "Live Random Data"
+window.onload = function () {
+	s1AccChart = new CanvasJS.Chart("sensor1Acc",{
+		backgroundColor: "transparent",
+		axisY:{
+			gridColor: "rgba(255,255,255,.05)",
+			tickColor: "rgba(255,255,255,.05)",
+			labelFontColor: "#a2a2a2"
 		},
-		data: [{
+		axisX:{
+			labelFontColor: "#a2a2a2"
+		},
+		data:[{
 			type: "line",
-			dataPoints: dps
-		}]
+			showInLegend: true,
+			name: "X",
+			dataPoints: dpsAccXS1
+		},{
+			type: "line",
+			showInLegend: true,
+			name: "Y",
+			dataPoints: dpsAccYS1
+		},{
+			type: "line",
+			showInLegend: true,
+			name: "Z",
+			dataPoints: dpsAccZS1
+		}],
+		legend: {
+			cursor:"pointer",
+			itemclick : function(e) {
+				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+				e.dataSeries.visible = false;
+				}
+				else {
+					e.dataSeries.visible = true;
+				}
+				s1AccChart.render();
+			}
+		}
+	});
+	s1GyroChart = new CanvasJS.Chart("sensor1Gyro",{
+		backgroundColor: "transparent",
+		axisY:{
+			gridColor: "rgba(255,255,255,.05)",
+			tickColor: "rgba(255,255,255,.05)",
+			labelFontColor: "#a2a2a2"
+		},
+		axisX:{
+			labelFontColor: "#a2a2a2"
+		},
+		data:[{
+			type: "line",
+			showInLegend: true,
+			name: "X",
+			dataPoints: dpsGyroXS1
+		},{
+			type: "line",
+			showInLegend: true,
+			name: "Y",
+			dataPoints: dpsGyroYS1
+		},{
+			type: "line",
+			showInLegend: true,
+			name: "Z",
+			dataPoints: dpsGyroZS1
+		}],
+		legend: {
+			cursor:"pointer",
+			itemclick : function(e) {
+				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+				e.dataSeries.visible = false;
+				}
+				else {
+					e.dataSeries.visible = true;
+				}
+				s1GyroChart.render();
+			}
+		}
 	});
 
-	var xVal = 0;
-	var yVal = 100;
-	var updateInterval = 10;
-	var dataLength = 500; // number of dataPoints visible at any point
-
-	var updateChart = function (count) {
-		count = count || 1;
-		// count is number of times loop runs to generate random dataPoints.
-
-		for (var j = 0; j < count; j++) {
-			yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
-			dps.push({
-				x: xVal,
-				y: yVal
-			});
-			xVal++;
-		};
-		if (dps.length > dataLength)
-		{
-			dps.shift();
+	s2AccChart = new CanvasJS.Chart("sensor2Acc",{
+		backgroundColor: "transparent",
+		axisY:{
+			gridColor: "rgba(255,255,255,.05)",
+			tickColor: "rgba(255,255,255,.05)",
+			labelFontColor: "#a2a2a2"
+		},
+		axisX:{
+			labelFontColor: "#a2a2a2"
+		},
+		data:[{
+			type: "line",
+			showInLegend: true,
+			name: "X",
+			dataPoints: dpsAccXS2
+		},{
+			type: "line",
+			showInLegend: true,
+			name: "Y",
+			dataPoints: dpsAccYS2
+		},{
+			type: "line",
+			showInLegend: true,
+			name: "Z",
+			dataPoints: dpsAccZS2
+		}],
+		legend: {
+			cursor:"pointer",
+			itemclick : function(e) {
+				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+				e.dataSeries.visible = false;
+				}
+				else {
+					e.dataSeries.visible = true;
+				}
+				s2AccChart.render();
+			}
 		}
-
-		chart.render();
-
-	};
-
-	// generates first set of dataPoints
-	updateChart(dataLength);
-
-	// update chart after specified time.
-	setInterval(function(){updateChart()}, updateInterval);
+	});
+	s2GyroChart = new CanvasJS.Chart("sensor2Gyro",{
+		backgroundColor: "transparent",
+		axisY:{
+			gridColor: "rgba(255,255,255,.05)",
+			tickColor: "rgba(255,255,255,.05)",
+			labelFontColor: "#a2a2a2"
+		},
+		axisX:{
+			labelFontColor: "#a2a2a2"
+		},
+		data:[{
+			type: "line",
+			showInLegend: true,
+			name: "X",
+			dataPoints: dpsGyroXS2
+		},{
+			type: "line",
+			showInLegend: true,
+			name: "Y",
+			dataPoints: dpsGyroYS2
+		},{
+			type: "line",
+			showInLegend: true,
+			name: "Z",
+			dataPoints: dpsGyroZS2
+		}],
+		legend: {
+			cursor:"pointer",
+			itemclick : function(e) {
+				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+				e.dataSeries.visible = false;
+				}
+				else {
+					e.dataSeries.visible = true;
+				}
+				s2GyroChart.render();
+			}
+		}
+	});
+	setupWs();
 }
 
 function setupWs(){
 	var host = window.document.location.host.replace(/:.*/, '');
   var ws = new WebSocket('ws://' + host + ':8080');
+
   ws.onmessage = function (event) {
-    console.log(event.data);
+		var lecture = JSON.parse(event.data);
+		if(lecture.ID == "Sensor1"){
+			dpsAccXS1.push({
+				x: lecture.millis,
+				y: lecture.accX
+			});
+			dpsAccYS1.push({
+				x: lecture.millis,
+				y: lecture.accY
+			});
+			dpsAccZS1.push({
+				x: lecture.millis,
+				y: lecture.accZ
+			});
+
+			dpsGyroXS1.push({
+				x: lecture.millis,
+				y: lecture.gyroX
+			});
+			dpsGyroYS1.push({
+				x: lecture.millis,
+				y: lecture.gyroY
+			});
+			dpsGyroZS1.push({
+				x: lecture.millis,
+				y: lecture.gyroZ
+			});
+
+			if (dpsAccXS1.length > dataLength){
+				dpsAccXS1.shift();
+				dpsAccYS1.shift();
+				dpsAccZS1.shift();
+				dpsGyroXS1.shift();
+				dpsGyroYS1.shift();
+				dpsGyroZS1.shift();
+			}
+
+			s1AccChart.render();
+			s1GyroChart.render();
+		}else if(lecture.ID == "Sensor2") {
+			dpsAccXS2.push({
+				x: lecture.millis,
+				y: lecture.accX
+			});
+			dpsAccYS2.push({
+				x: lecture.millis,
+				y: lecture.accY
+			});
+			dpsAccZS2.push({
+				x: lecture.millis,
+				y: lecture.accZ
+			});
+
+			dpsGyroXS2.push({
+				x: lecture.millis,
+				y: lecture.gyroX
+			});
+			dpsGyroYS2.push({
+				x: lecture.millis,
+				y: lecture.gyroY
+			});
+			dpsGyroZS2.push({
+				x: lecture.millis,
+				y: lecture.gyroZ
+			});
+
+			if (dpsAccXS2.length > dataLength){
+				dpsAccXS2.shift();
+				dpsAccYS2.shift();
+				dpsAccZS2.shift();
+				dpsGyroXS2.shift();
+				dpsGyroYS2.shift();
+				dpsGyroZS2.shift();
+			}
+
+			s2AccChart.render();
+			s2GyroChart.render();
+		}
   };
 }
