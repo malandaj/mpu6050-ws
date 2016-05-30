@@ -6,6 +6,8 @@ var server = require('http').createServer()
   , app = express()
   , port = 8080;
 
+var path = require('path');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
