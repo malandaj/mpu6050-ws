@@ -13,45 +13,47 @@ html(lang='en')
     link(href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic', rel='stylesheet')
     link(href='css/toolkit.min.css', rel='stylesheet')
     link(href='css/application.css', rel='stylesheet')
-  body
-    .container
-      .row
-        .col-sm-3.sidebar
-          nav.sidebar-nav
-            .sidebar-header
-              button.nav-toggler.nav-toggler-sm.sidebar-toggler(type='button', data-toggle='collapse', data-target='#nav-toggleable-sm')
-                span.sr-only Toggle nav
-              a.sidebar-brand.img-responsive(href='#')
-                span.icon.icon-leaf.sidebar-brand-icon
-            #nav-toggleable-sm.collapse.nav-toggleable-sm
-              ul.nav.nav-pills.nav-stacked
-                li.nav-header Dashboards
-                li.active
-                  a(href='index.html') Overview
-        .col-sm-9.content
-          .dashhead
-            .dashhead-titles
-              h6.dashhead-subtitle Dashboards
-              h2.dashhead-title Overview
-          hr.m-t
-          .row.text-center.m-t-lg
-            .col-sm-6.m-b-md
-              h3 Sensor 1 Accelerometer
-              .w-full.m-x-auto
-                #sensor1Acc(style='height: 300px; width:100%;')
-            .col-sm-6.m-b-md
-              h3 Sensor 1 Gyro
-              .w-full.m-x-auto
-                #sensor1Gyro(style='height: 300px; width:100%;')
-          .row.text-center.m-t-lg
-            .col-sm-6.m-b-md
-              h3 Sensor 2 Accelerometer
-              .w-full.m-x-auto
-                #sensor2Acc(style='height: 300px; width:100%;')
-            .col-sm-6.m-b-md
-              h3 Sensor 2 Gyro
-              .w-full.m-x-auto
-                #sensor2Gyro(style='height: 300px; width:100%;')
+  body.with-top-navbar
+    nav.navbar.navbar-inverse.navbar-fixed-top
+      .container-fluid.container-fluid-spacious
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand.navbar-brand-emphasized(href='#')
+            span.icon.icon-leaf.navbar-brand-icon
+            |   Dashboard
+        #navbar.navbar-collapse.collapse
+          ul.nav.navbar-nav
+            li
+              a(href='#') Real time status
+    .container-fluid.container-fluid-spacious
+      .dashhead.m-t-md
+        .dashhead-titles
+          h6.dashhead-subtitle Dashboards
+          h2.dashhead-title Overview
+      .hr-divider.m-t.m-b-md
+        h3.hr-divider-content.hr-divider-heading Quick stats
+      .row.text-center.m-t-lg
+        .col-sm-6.m-b-md
+          h3 Sensor 1 Accelerometer
+          .w-full.m-x-auto
+            #sensor1Acc(style='height: 300px; width:100%;')
+        .col-sm-6.m-b-md
+          h3 Sensor 1 Gyro
+          .w-full.m-x-auto
+            #sensor1Gyro(style='height: 300px; width:100%;')
+      .row.text-center.m-t-lg
+        .col-sm-6.m-b-md
+          h3 Sensor 2 Accelerometer
+          .w-full.m-x-auto
+            #sensor2Acc(style='height: 300px; width:100%;')
+        .col-sm-6.m-b-md
+          h3 Sensor 2 Gyro
+          .w-full.m-x-auto
+            #sensor2Gyro(style='height: 300px; width:100%;')
     // Include jQuery (required) and the JS
     script(src='js/jquery.min.js')
     script(src='js/toolkit.min.js')
