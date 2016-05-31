@@ -23,6 +23,8 @@ unsigned long lastMsg = 0;
 int cont = 0;
 const long interval = 10;
 
+bool ban = false;
+
 #define packetSize (180)
 
 void setup() {
@@ -67,6 +69,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
       break;
     case WStype_TEXT:
         Serial.printf("Recibi: %s\n", payload);
+        ban = !ban;
       break;
   }
 }
@@ -74,23 +77,25 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
 void loop() {
   unsigned long now = millis();
   // send one lecture every 10ms (100Hz)
-  if (now - lastMsg >= interval) {
-    lastMsg = now;
-    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-    StaticJsonBuffer<packetSize> jsonBuffer;
-    JsonObject& root = jsonBuffer.createObject();
-    String JSON;
-    root["ID"] = "Sensor2";
-    root["accX"] = ax;
-    root["accY"] = ay;
-    root["accZ"] = az;
-    root["gyroX"] = gx;
-    root["gyroY"] = gy;
-    root["gyroZ"] = gz;
-    root["millis"] = lastMsg;
-    root["cont"] = cont;
-    ++cont;
-    root.printTo(JSON);
-    webSocket.sendTXT(JSON);
+  if(ban){
+    if (now - lastMsg >= interval) {
+      lastMsg = now;
+      accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+      StaticJsonBuffer<packetSize> jsonBuffer;
+      JsonObject& root = jsonBuffer.createObject();
+      String JSON;
+      root["ID"] = "Sensor1";
+      root["accX"] = ax;
+      root["accY"] = ay;
+      root["accZ"] = az;
+      root["gyroX"] = gx;
+      root["gyroY"] = gy;
+      root["gyroZ"] = gz;
+      root["millis"] = lastMsg;
+      root["cont"] = cont;
+      ++cont;
+      root.printTo(JSON);
+      webSocket.sendTXT(JSON);
+    }
   }
 }

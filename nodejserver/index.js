@@ -19,19 +19,29 @@ app.get('/', function (req, res) {
 });
 
 var clients = [];
+var sensors = [];
 wss.on('connection', function connection(ws) {
   if(ws.protocol != "arduino"){
     console.log("agregar navegador");
     clients.push(ws);
+  }else if(ws.protocol == "arduino"){
+    console.log("agregar sensor");
+    sensors.push(ws);
   }
 
   ws.on('message', function incoming(message) {
-    console.log(message);
+    if(message == "startPreview"){
+      sensors.forEach(function(sensor) {
+        sensor.send('1');
+      });
+    }else{
+      console.log(message);
+      clients.forEach(function(client) {
+        client.send(message);
+      });
+    }
     //var lecture = JSON.parse(message);
     //console.log('received: %s', lecture.millis);
-    clients.forEach(function(client) {
-      client.send(message);
-    });
   });
 
   ws.on('close', function() {

@@ -15,6 +15,7 @@ var s1AccChart;
 var s1GyroChart;
 var s2AccChart;
 var s2GyroChart;
+var ws;
 
 window.onload = function () {
 	s1AccChart = new CanvasJS.Chart("sensor1Acc",{
@@ -179,7 +180,7 @@ window.onload = function () {
 
 function setupWs(){
 	var host = window.document.location.host.replace(/:.*/, '');
-  var ws = new WebSocket('ws://' + host + ':8080');
+  ws = new WebSocket('ws://' + host + ':8080');
 
   ws.onmessage = function (event) {
 		var lecture = JSON.parse(event.data);
@@ -261,4 +262,8 @@ function setupWs(){
 			s2GyroChart.render();
 		}
   };
+}
+
+function startPreview(){
+	ws.send("startPreview");
 }
