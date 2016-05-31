@@ -16,7 +16,7 @@ html(lang='en')
   body
     .container
       .row
-        .col-sm-2.sidebar
+        .col-sm-3.sidebar
           nav.sidebar-nav
             .sidebar-header
               button.nav-toggler.nav-toggler-sm.sidebar-toggler(type='button', data-toggle='collapse', data-target='#nav-toggleable-sm')
@@ -28,7 +28,7 @@ html(lang='en')
                 li.nav-header Dashboards
                 li.active
                   a(href='index.html') Overview
-        .col-sm-10.content
+        .col-sm-9.content
           .dashhead
             .dashhead-titles
               h6.dashhead-subtitle Dashboards
@@ -36,16 +36,20 @@ html(lang='en')
           hr.m-t
           .row.text-center.m-t-lg
             .col-sm-6.m-b-md
+              h3 Sensor 1 Accelerometer
               .w-full.m-x-auto
                 #sensor1Acc(style='height: 300px; width:100%;')
             .col-sm-6.m-b-md
+              h3 Sensor 1 Gyro
               .w-full.m-x-auto
                 #sensor1Gyro(style='height: 300px; width:100%;')
           .row.text-center.m-t-lg
             .col-sm-6.m-b-md
+              h3 Sensor 2 Accelerometer
               .w-full.m-x-auto
                 #sensor2Acc(style='height: 300px; width:100%;')
             .col-sm-6.m-b-md
+              h3 Sensor 2 Gyro
               .w-full.m-x-auto
                 #sensor2Gyro(style='height: 300px; width:100%;')
     // Include jQuery (required) and the JS
