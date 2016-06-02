@@ -68,7 +68,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
       }
       break;
     case WStype_TEXT:
-        Serial.printf("Recibi: %s\n", payload);
+        //Serial.printf("Recibi: %s\n", payload);
         ban = !ban;
       break;
   }

@@ -13,6 +13,7 @@ html(lang='en')
     link(href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic', rel='stylesheet')
     link(href='css/toolkit.min.css', rel='stylesheet')
     link(href='css/application.css', rel='stylesheet')
+    link(rel='stylesheet', type='text/css', href='css/sweetalert.css')
   body.with-top-navbar
     nav.navbar.navbar-inverse.navbar-fixed-top
       .container-fluid.container-fluid-spacious
@@ -35,7 +36,7 @@ html(lang='en')
           h6.dashhead-subtitle Dashboards
           h2.dashhead-title Overview
         .btn-toolbar.dashhead-toolbar
-          button.btn.btn-lg.btn-primary-outline(type='button' onclick='startPreview()') Start preview data
+          button#btnStart.btn.btn-lg.btn-primary-outline(type='button' onclick='startPreview()') Start preview data
       .hr-divider.m-t.m-b-md
         h3.hr-divider-content.hr-divider-heading Quick stats
       .row.text-center.m-t-lg
@@ -60,4 +61,5 @@ html(lang='en')
     script(src='js/jquery.min.js')
     script(src='js/toolkit.min.js')
     script(src='js/canvasjs.min.js')
+    script(src='js/sweetalert.min.js')
     script(src='js/funciones.js')

@@ -10,12 +10,13 @@ var dpsAccZS2 = []; // dataPoints Acc Sensor1
 var dpsGyroXS2 = []; // dataPoints Gyro Sensor1
 var dpsGyroYS2 = []; // dataPoints Gyro Sensor1
 var dpsGyroZS2 = []; // dataPoints Gyro Sensor1
-var dataLength = 200; // number of dataPoints visible at any point
+var dataLength = 300; // number of dataPoints visible at any point
 var s1AccChart;
 var s1GyroChart;
 var s2AccChart;
 var s2GyroChart;
 var ws;
+var ban = false;
 
 window.onload = function () {
 	s1AccChart = new CanvasJS.Chart("sensor1Acc",{
@@ -186,28 +187,28 @@ function setupWs(){
 		var lecture = JSON.parse(event.data);
 		if(lecture.ID == "Sensor1"){
 			dpsAccXS1.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.accX
 			});
 			dpsAccYS1.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.accY
 			});
 			dpsAccZS1.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.accZ
 			});
 
 			dpsGyroXS1.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.gyroX
 			});
 			dpsGyroYS1.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.gyroY
 			});
 			dpsGyroZS1.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.gyroZ
 			});
 
@@ -224,28 +225,28 @@ function setupWs(){
 			s1GyroChart.render();
 		}else if(lecture.ID == "Sensor2") {
 			dpsAccXS2.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.accX
 			});
 			dpsAccYS2.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.accY
 			});
 			dpsAccZS2.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.accZ
 			});
 
 			dpsGyroXS2.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.gyroX
 			});
 			dpsGyroYS2.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.gyroY
 			});
 			dpsGyroZS2.push({
-				x: lecture.millis,
+				x: lecture.cont,
 				y: lecture.gyroZ
 			});
 
@@ -265,5 +266,19 @@ function setupWs(){
 }
 
 function startPreview(){
+	ban = !ban;
+	if (ban){
+		swal({
+			type: "success",
+			title: "Start",
+			text: "Data will start in 3 seconds",
+			timer: 3000,
+			animation: true,
+			showConfirmButton: false
+		});
+		$("#btnStart").html('Stop data');
+	}else{
+		$("#btnStart").html('Start data');
+	}
 	ws.send("startPreview");
 }
