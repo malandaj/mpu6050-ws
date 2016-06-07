@@ -7,6 +7,20 @@ var server = require('http').createServer()
   , port = 8080;
 
 var path = require('path');
+var saving = false;
+
+const low = require('lowdb');
+const storage = require('lowdb/lib/file-async')
+
+var db = low('db.json', {
+  storage: storage,
+  writeOnChange: false
+})
+
+//init
+db.defaults({ lectures: [] })
+  .value()
+var lectures = db.get('lectures', [])
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,8 +48,16 @@ wss.on('connection', function connection(ws) {
       sensors.forEach(function(sensor) {
         sensor.send('1');
       });
+    }else if(message == "startSaving"){
+      saving = true;
+    }else if(message == "stopSaving"){
+      saving = false;
+      db.write();
     }else{
-      console.log(message);
+      if(saving){
+        //console.log(message);
+        lectures.push(message).value()
+      }
       clients.forEach(function(client) {
         client.send(message);
       });

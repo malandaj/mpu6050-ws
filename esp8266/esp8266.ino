@@ -15,9 +15,13 @@ int16_t gx, gy, gz;
 
 WebSocketsClient webSocket;
 // Update these with values suitable for your network.
-const char* ssid = "BrokenBrains";
-const char* password = "1234567278";
-const char* ws = "192.168.2.116"; // ip addres of nodejs server
+//const char* ssid = "BrokenBrains";
+//const char* password = "1234567278";
+//const char* ws = "192.168.2.116"; // ip addres of nodejs server
+
+const char* ssid = "hackmeifucan";
+const char* password = "Bpy()[wmmt]w#j$Q}X8S58$yH^:Hx5t)cTmSAad~SR*9z";
+const char* ws = "192.168.0.2"; // ip addres of nodejs server
 
 unsigned long lastMsg = 0;
 int cont = 0;

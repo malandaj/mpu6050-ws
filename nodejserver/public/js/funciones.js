@@ -16,9 +16,11 @@ var s1GyroChart;
 var s2AccChart;
 var s2GyroChart;
 var ws;
-var ban = false;
+var banPreview = false;
+var banSave = false;
 
 window.onload = function () {
+	document.getElementById("btnStartSaving").disabled = true;
 	s1AccChart = new CanvasJS.Chart("sensor1Acc",{
 		backgroundColor: "transparent",
 		axisY:{
@@ -266,19 +268,24 @@ function setupWs(){
 }
 
 function startPreview(){
-	ban = !ban;
-	if (ban){
-		swal({
-			type: "success",
-			title: "Start",
-			text: "Data will start in 3 seconds",
-			timer: 3000,
-			animation: true,
-			showConfirmButton: false
-		});
-		$("#btnStart").html('Stop data');
+	banPreview = !banPreview;
+	if (banPreview){
+		$("#btnStartPreview").html('Stop data');
+		document.getElementById("btnStartSaving").disabled = false;
 	}else{
-		$("#btnStart").html('Start data');
+		$("#btnStartPreview").html('Start data');
+		document.getElementById("btnStartSaving").disabled = true;
 	}
 	ws.send("startPreview");
+}
+
+function startSaving(){
+	banSave = !banSave;
+	if(banSave){
+		$("#btnStartSaving").html('Stop saving data');
+		ws.send("startSaving");
+	}else{
+		$("#btnStartSaving").html('Start saving data');
+		ws.send("stopSaving");
+	}
 }
