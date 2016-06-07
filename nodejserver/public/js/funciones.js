@@ -214,7 +214,7 @@ function setupWs(){
 				y: lecture.gyroZ
 			});
 
-			if (dpsAccXS1.length > dataLength){
+			if (dpsAccXS1.length == dataLength){
 				dpsAccXS1.shift();
 				dpsAccYS1.shift();
 				dpsAccZS1.shift();
@@ -252,7 +252,7 @@ function setupWs(){
 				y: lecture.gyroZ
 			});
 
-			if (dpsAccXS2.length > dataLength){
+			if (dpsAccXS2.length == dataLength){
 				dpsAccXS2.shift();
 				dpsAccYS2.shift();
 				dpsAccZS2.shift();

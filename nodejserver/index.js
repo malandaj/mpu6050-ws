@@ -50,9 +50,11 @@ wss.on('connection', function connection(ws) {
       });
     }else if(message == "startSaving"){
       saving = true;
+      console.log("Start saving");
     }else if(message == "stopSaving"){
       saving = false;
       db.write();
+      console.log("Stop saving");
     }else{
       if(saving){
         //console.log(message);
