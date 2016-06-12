@@ -55,13 +55,17 @@ wss.on('connection', function connection(ws) {
       saving = false;
       db.write();
       console.log("Stop saving");
+      prepareFiles();
     }else{
       if(saving){
         //console.log(message);
         lectures.push(message).value()
       }
       clients.forEach(function(client) {
-        client.send(message);
+        client.send(message, function ack(error){
+          // if error is not defined, the send has been completed,
+          // otherwise the error object will indicate what failed.
+        });
       });
     }
     //var lecture = JSON.parse(message);
@@ -73,6 +77,12 @@ wss.on('connection', function connection(ws) {
     delete clients[ws];
   });
 });
+
+function prepareFiles(){
+  console.log('Preparar archivos');
+  data = JSON.stringify(db.getState());
+  console.log(data);
+}
 
 server.on('request', app);
 server.listen(port, function () { console.log('Listening on ' + server.address().port) });
