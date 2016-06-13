@@ -21,6 +21,8 @@ var banSave = false;
 
 window.onload = function () {
 	document.getElementById("btnStartSaving").disabled = true;
+	$('#btnDownload').attr('disabled', true);
+	$('#btnDownload').bind('click', false);
 	s1AccChart = new CanvasJS.Chart("sensor1Acc",{
 		backgroundColor: "transparent",
 		axisY:{
@@ -186,83 +188,90 @@ function setupWs(){
   ws = new WebSocket('ws://' + host + ':8080');
 
   ws.onmessage = function (event) {
-		var lecture = JSON.parse(event.data);
-		if(lecture.ID == "Sensor1"){
-			dpsAccXS1.push({
-				x: lecture.cont,
-				y: lecture.accX
-			});
-			dpsAccYS1.push({
-				x: lecture.cont,
-				y: lecture.accY
-			});
-			dpsAccZS1.push({
-				x: lecture.cont,
-				y: lecture.accZ
-			});
+		if(event.data == "fileRdy"){
+			NProgress.done();
+			$('#btnDownload').attr('disabled', false);
+			$('#btnDownload').unbind('click', false);
+			swal("File ready!", "You download the data using the button below the charts", "success")
+		}else{
+			var lecture = JSON.parse(event.data);
+			if(lecture.ID == "Sensor1"){
+				dpsAccXS1.push({
+					x: lecture.cont,
+					y: lecture.accX
+				});
+				dpsAccYS1.push({
+					x: lecture.cont,
+					y: lecture.accY
+				});
+				dpsAccZS1.push({
+					x: lecture.cont,
+					y: lecture.accZ
+				});
 
-			dpsGyroXS1.push({
-				x: lecture.cont,
-				y: lecture.gyroX
-			});
-			dpsGyroYS1.push({
-				x: lecture.cont,
-				y: lecture.gyroY
-			});
-			dpsGyroZS1.push({
-				x: lecture.cont,
-				y: lecture.gyroZ
-			});
+				dpsGyroXS1.push({
+					x: lecture.cont,
+					y: lecture.gyroX
+				});
+				dpsGyroYS1.push({
+					x: lecture.cont,
+					y: lecture.gyroY
+				});
+				dpsGyroZS1.push({
+					x: lecture.cont,
+					y: lecture.gyroZ
+				});
 
-			if (dpsAccXS1.length == dataLength){
-				dpsAccXS1.shift();
-				dpsAccYS1.shift();
-				dpsAccZS1.shift();
-				dpsGyroXS1.shift();
-				dpsGyroYS1.shift();
-				dpsGyroZS1.shift();
+				if (dpsAccXS1.length == dataLength){
+					dpsAccXS1.shift();
+					dpsAccYS1.shift();
+					dpsAccZS1.shift();
+					dpsGyroXS1.shift();
+					dpsGyroYS1.shift();
+					dpsGyroZS1.shift();
+				}
+
+				s1AccChart.render();
+				s1GyroChart.render();
+			}else if(lecture.ID == "Sensor2") {
+				dpsAccXS2.push({
+					x: lecture.cont,
+					y: lecture.accX
+				});
+				dpsAccYS2.push({
+					x: lecture.cont,
+					y: lecture.accY
+				});
+				dpsAccZS2.push({
+					x: lecture.cont,
+					y: lecture.accZ
+				});
+
+				dpsGyroXS2.push({
+					x: lecture.cont,
+					y: lecture.gyroX
+				});
+				dpsGyroYS2.push({
+					x: lecture.cont,
+					y: lecture.gyroY
+				});
+				dpsGyroZS2.push({
+					x: lecture.cont,
+					y: lecture.gyroZ
+				});
+
+				if (dpsAccXS2.length == dataLength){
+					dpsAccXS2.shift();
+					dpsAccYS2.shift();
+					dpsAccZS2.shift();
+					dpsGyroXS2.shift();
+					dpsGyroYS2.shift();
+					dpsGyroZS2.shift();
+				}
+
+				s2AccChart.render();
+				s2GyroChart.render();
 			}
-
-			s1AccChart.render();
-			s1GyroChart.render();
-		}else if(lecture.ID == "Sensor2") {
-			dpsAccXS2.push({
-				x: lecture.cont,
-				y: lecture.accX
-			});
-			dpsAccYS2.push({
-				x: lecture.cont,
-				y: lecture.accY
-			});
-			dpsAccZS2.push({
-				x: lecture.cont,
-				y: lecture.accZ
-			});
-
-			dpsGyroXS2.push({
-				x: lecture.cont,
-				y: lecture.gyroX
-			});
-			dpsGyroYS2.push({
-				x: lecture.cont,
-				y: lecture.gyroY
-			});
-			dpsGyroZS2.push({
-				x: lecture.cont,
-				y: lecture.gyroZ
-			});
-
-			if (dpsAccXS2.length == dataLength){
-				dpsAccXS2.shift();
-				dpsAccYS2.shift();
-				dpsAccZS2.shift();
-				dpsGyroXS2.shift();
-				dpsGyroYS2.shift();
-				dpsGyroZS2.shift();
-			}
-
-			s2AccChart.render();
-			s2GyroChart.render();
 		}
   };
 }
@@ -287,5 +296,8 @@ function startSaving(){
 	}else{
 		$("#btnStartSaving").html('Start saving data');
 		ws.send("stopSaving");
+		NProgress.start();
+		$("#btnStartPreview").html('Start data');
+		ws.send("startPreview");
 	}
 }

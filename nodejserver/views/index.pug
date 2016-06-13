@@ -13,6 +13,7 @@ html(lang='en')
     link(href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic', rel='stylesheet')
     link(href='css/toolkit.min.css', rel='stylesheet')
     link(href='css/application.css', rel='stylesheet')
+    link(href='css/nprogress.css', rel='stylesheet')
     link(rel='stylesheet', type='text/css', href='css/sweetalert.css')
   body.with-top-navbar
     nav.navbar.navbar-inverse.navbar-fixed-top
@@ -58,9 +59,11 @@ html(lang='en')
           h3 Sensor 2 Gyro
           .w-full.m-x-auto
             #sensor2Gyro(style='height: 300px; width:100%;')
+        a#btnDownload.btn.btn-lg.btn-primary-outline(href='/downloadData', role='button') Download data
     // Include jQuery (required) and the JS
     script(src='js/jquery.min.js')
     script(src='js/toolkit.min.js')
     script(src='js/canvasjs.min.js')
     script(src='js/sweetalert.min.js')
+    script(src='js/nprogress.js')
     script(src='js/funciones.js')

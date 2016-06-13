@@ -88,7 +88,7 @@ void loop() {
       StaticJsonBuffer<packetSize> jsonBuffer;
       JsonObject& root = jsonBuffer.createObject();
       String JSON;
-      root["ID"] = "Sensor2";
+      root["ID"] = "Sensor1";
       root["accX"] = ax;
       root["accY"] = ay;
       root["accZ"] = az;

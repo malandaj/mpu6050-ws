@@ -12,10 +12,8 @@ var saving = false;
 const low = require('lowdb');
 const storage = require('lowdb/lib/file-async')
 
-var db = low('db.json', {
-  storage: storage,
-  writeOnChange: false
-})
+var db = low()
+const fs = require('fs')
 
 //init
 db.defaults({ lectures: [] })
@@ -32,6 +30,12 @@ app.get('/', function (req, res) {
   res.render('index');
 });
 
+app.get('/downloadData', function (req, res){
+  console.log('enviar archivo');
+  var file = __dirname + '/db.json';
+  res.download(file);
+})
+
 var clients = [];
 var sensors = [];
 wss.on('connection', function connection(ws) {
@@ -46,14 +50,16 @@ wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
     if(message == "startPreview"){
       sensors.forEach(function(sensor) {
-        sensor.send('1');
+        sensor.send('1', function ack(error){
+          // if error is not defined, the send has been completed,
+          // otherwise the error object will indicate what failed.
+        });
       });
     }else if(message == "startSaving"){
       saving = true;
       console.log("Start saving");
     }else if(message == "stopSaving"){
       saving = false;
-      db.write();
       console.log("Stop saving");
       prepareFiles();
     }else{
@@ -74,14 +80,26 @@ wss.on('connection', function connection(ws) {
 
   ws.on('close', function() {
     //remove the client from clients list
-    delete clients[ws];
+    if (clients[ws] != null){
+      delete clients[ws];
+      console.log('Quitar cliente');
+    }
   });
 });
 
 function prepareFiles(){
+  var sensorNames = [];
+  var res = {};
   console.log('Preparar archivos');
-  data = JSON.stringify(db.getState());
-  console.log(data);
+  data = db.getState().lectures;
+  fs.writeFileSync('db.json', JSON.stringify(data, null, '\t'))
+  clients.forEach(function(client) {
+    client.send("fileRdy", function ack(error){
+      // if error is not defined, the send has been completed,
+      // otherwise the error object will indicate what failed.
+    });
+  });
+  //console.log(data);
 }
 
 server.on('request', app);
