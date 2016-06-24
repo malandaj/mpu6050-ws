@@ -154,17 +154,20 @@ void setupMPU(){
   Wire.begin();
   Serial.println("Initializing I2C devices...");
   accelgyro.initialize();
+  //sensitivity
+  accelgyro.setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
+  accelgyro.setFullScaleGyroRange(MPU6050_GYRO_FS_2000);
   // verify connection
   Serial.println("Testing device connections...");
   Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 
   //Add calibration offsets
-  accelgyro.setXAccelOffset(-1590);
-  accelgyro.setYAccelOffset(841);
-  accelgyro.setZAccelOffset(1334);
-  accelgyro.setXGyroOffset(-60);
-  accelgyro.setYGyroOffset(-13);
-  accelgyro.setZGyroOffset(44);
+  accelgyro.setXAccelOffset(-4510);
+  accelgyro.setYAccelOffset(-1840);
+  accelgyro.setZAccelOffset(1150);
+  accelgyro.setXGyroOffset(50);
+  accelgyro.setYGyroOffset(-15);
+  accelgyro.setZGyroOffset(24);
 }
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
