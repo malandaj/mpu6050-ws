@@ -151,7 +151,7 @@ void setup() {
 }
 
 void setupMPU(){
-  Wire.begin();
+  Wire.begin(12,14);
   Serial.println("Initializing I2C devices...");
   accelgyro.initialize();
   //sensitivity
