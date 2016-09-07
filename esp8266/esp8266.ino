@@ -74,6 +74,7 @@ void setup() {
         }else{
           Serial.println("failed to load json config");
         }
+        configFile.close();
       }
     }
   }else{
@@ -131,15 +132,16 @@ void setup() {
     File configFile = SPIFFS.open("/config.json", "w");
     if (!configFile) {
       Serial.println("failed to open config file for writing");
+    }else{
+      json.printTo(Serial);
+      json.printTo(configFile);
+      configFile.close();
     }
-
-    json.printTo(Serial);
-    json.printTo(configFile);
-    configFile.close();
   }
 
   Serial.println("local ip");
   Serial.println(WiFi.localIP());
+  SPIFFS.end();
   
   //Configure connection to mpu6050
   setupMPU();
@@ -151,7 +153,7 @@ void setup() {
 }
 
 void setupMPU(){
-  Wire.begin(12,14);
+  Wire.begin();
   Serial.println("Initializing I2C devices...");
   accelgyro.initialize();
   //sensitivity
@@ -196,7 +198,7 @@ void loop() {
       StaticJsonBuffer<packetSize> jsonBuffer;
       JsonObject& root = jsonBuffer.createObject();
       String JSON;
-      root["ID"] = "Sensor1";
+      root["ID"] = "Sensor2";
       root["accX"] = ax;
       root["accY"] = ay;
       root["accZ"] = az;
