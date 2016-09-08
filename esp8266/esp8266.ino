@@ -4,7 +4,16 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 #include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
+#include <WebSocketsClient.h>
+#include "I2Cdev.h"
+#include "MPU6050.h"
+#include "Wire.h"
 
+MPU6050 accelgyro;
+int16_t ax, ay, az;
+int16_t gx, gy, gz;
+
+WebSocketsClient webSocket;
 //define your default values here, if there are different values in config.json, they are overwritten.
 char ws_server[40];
 char ws_port[6] = "8080";
@@ -131,10 +140,30 @@ void setup() {
   Serial.println("local ip");
   Serial.println(WiFi.localIP());
 
+  //Configure connection to mpu6050
+  setupMPU();
+}
+
+void setupMPU(){
+  Wire.begin();
+  Serial.println("Initializing I2C devices...");
+  accelgyro.initialize();
+  //sensitivity
+  accelgyro.setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
+  accelgyro.setFullScaleGyroRange(MPU6050_GYRO_FS_2000);
+  // verify connection
+  Serial.println("Testing device connections...");
+  Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+
+  //Add calibration offsets
+  accelgyro.setXAccelOffset(-4510);
+  accelgyro.setYAccelOffset(-1840);
+  accelgyro.setZAccelOffset(1150);
+  accelgyro.setXGyroOffset(50);
+  accelgyro.setYGyroOffset(-15);
+  accelgyro.setZGyroOffset(24);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
-
 }
