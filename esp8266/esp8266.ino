@@ -20,6 +20,7 @@ char ws_port[6] = "8080";
 
 //flag for saving data
 bool shouldSaveConfig = false;
+bool ban = false;
 
 //callback notifying us of the need to save config
 void saveConfigCallback () {
@@ -142,6 +143,8 @@ void setup() {
 
   //Configure connection to mpu6050
   setupMPU();
+  webSocket.begin(ws_server, atoi(ws_port));
+  webSocket.onEvent(webSocketEvent);
 }
 
 void setupMPU(){
@@ -164,6 +167,22 @@ void setupMPU(){
   accelgyro.setZGyroOffset(24);
 }
 
+
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
+  switch(type) {
+    case WStype_DISCONNECTED:
+      Serial.println("[WSc] Disconnected!");
+      break;
+    case WStype_CONNECTED:
+      Serial.println("[WSc] Connected");
+      break;
+    case WStype_TEXT:
+      ban = !ban;
+      break;
+  }
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
+  webSocket.loop();
 }
