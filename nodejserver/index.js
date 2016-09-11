@@ -49,6 +49,7 @@ wss.on('connection', function connection(ws) {
   }
 
   ws.on('message', function incoming(message) {
+    console.log(message);
     if(message == "startPreview"){
       sensors.forEach(function(sensor) {
         sensor.send('1', function ack(error){

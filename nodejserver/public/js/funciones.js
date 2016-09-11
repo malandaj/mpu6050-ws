@@ -198,28 +198,28 @@ function setupWs(){
 			if(lecture.ID == "Sensor1"){
 				dpsAccXS1.push({
 					x: lecture.cont,
-					y: lecture.accX
+					y: lecture.aX
 				});
 				dpsAccYS1.push({
 					x: lecture.cont,
-					y: lecture.accY
+					y: lecture.aY
 				});
 				dpsAccZS1.push({
 					x: lecture.cont,
-					y: lecture.accZ
+					y: lecture.aZ
 				});
 
 				dpsGyroXS1.push({
 					x: lecture.cont,
-					y: lecture.gyroX
+					y: lecture.gX
 				});
 				dpsGyroYS1.push({
 					x: lecture.cont,
-					y: lecture.gyroY
+					y: lecture.gY
 				});
 				dpsGyroZS1.push({
 					x: lecture.cont,
-					y: lecture.gyroZ
+					y: lecture.gZ
 				});
 
 				if (dpsAccXS1.length == dataLength){
@@ -236,28 +236,28 @@ function setupWs(){
 			}else if(lecture.ID == "Sensor2") {
 				dpsAccXS2.push({
 					x: lecture.cont,
-					y: lecture.accX
+					y: lecture.aX
 				});
 				dpsAccYS2.push({
 					x: lecture.cont,
-					y: lecture.accY
+					y: lecture.aY
 				});
 				dpsAccZS2.push({
 					x: lecture.cont,
-					y: lecture.accZ
+					y: lecture.aZ
 				});
 
 				dpsGyroXS2.push({
 					x: lecture.cont,
-					y: lecture.gyroX
+					y: lecture.gX
 				});
 				dpsGyroYS2.push({
 					x: lecture.cont,
-					y: lecture.gyroY
+					y: lecture.gY
 				});
 				dpsGyroZS2.push({
 					x: lecture.cont,
-					y: lecture.gyroZ
+					y: lecture.gZ
 				});
 
 				if (dpsAccXS2.length == dataLength){
