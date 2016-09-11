@@ -39,10 +39,11 @@ app.get('/downloadData', function (req, res){
 var clients = [];
 var sensors = [];
 wss.on('connection', function connection(ws) {
-  if(ws.protocol != "arduino"){
+  console.log(ws.protocol);
+  if(ws.protocol == "client"){
     console.log("agregar navegador");
     clients.push(ws);
-  }else if(ws.protocol == "arduino"){
+  }else{
     console.log("agregar sensor");
     sensors.push(ws);
   }

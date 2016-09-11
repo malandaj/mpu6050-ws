@@ -185,7 +185,7 @@ window.onload = function () {
 
 function setupWs(){
 	var host = window.document.location.host.replace(/:.*/, '');
-  ws = new WebSocket('ws://' + host + ':8080');
+  ws = new WebSocket('ws://' + host + ':8080',"client");
 
   ws.onmessage = function (event) {
 		if(event.data == "fileRdy"){

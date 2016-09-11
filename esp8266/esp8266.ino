@@ -22,6 +22,9 @@ char ws_port[6] = "8080";
 bool shouldSaveConfig = false;
 bool ban = false;
 
+unsigned long previousMillis = 0;
+const long interval = 10;
+
 //callback notifying us of the need to save config
 void saveConfigCallback () {
   Serial.println("Should save config");
@@ -182,7 +185,26 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
   }
 }
 
+struct SensorData {
+   const char* ID;
+   int16_t aX;
+   int16_t aY;
+   int16_t aZ;
+   int16_t gX;
+   int16_t gY;
+   int16_t gZ;
+   unsigned long prevMillis;
+   int16_t conta;
+};
+
+#define SENSORDATA_JSON_SIZE (JSON_OBJECT_SIZE(9))
+
 void loop() {
   // put your main code here, to run repeatedly:
   webSocket.loop();
+  unsigned long currentMillis = millis();
+  if(currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+    Serial.println(previousMillis);
+  }
 }
