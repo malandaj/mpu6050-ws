@@ -14,7 +14,7 @@ unsigned long cont=1;
 WebSocketsClient webSocket;
 const char* ssid     = "sensor";
 const char* password = "1234567278";
-const char* ws_server = "192.168.0.2";
+const char* ws_server = "148.226.154.129";
 int ws_port = 8080;
 
 //flag for sending data
