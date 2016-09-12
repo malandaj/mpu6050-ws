@@ -49,7 +49,7 @@ wss.on('connection', function connection(ws) {
   }
 
   ws.on('message', function incoming(message) {
-    console.log(message);
+    //console.log(message);
     if(message == "startPreview"){
       sensors.forEach(function(sensor) {
         sensor.send('1', function ack(error){
@@ -69,15 +69,15 @@ wss.on('connection', function connection(ws) {
         //console.log(message);
         lectures.push(message).value()
       }
-      clients.forEach(function(client) {
-        client.send(message, function ack(error){
-          // if error is not defined, the send has been completed,
-          // otherwise the error object will indicate what failed.
-        });
-      });
+      // clients.forEach(function(client) {
+      //   client.send(message, function ack(error){
+      //     // if error is not defined, the send has been completed,
+      //     // otherwise the error object will indicate what failed.
+      //   });
+      // });
+      parsed = JSON.parse(message);
+      console.log(parsed);
     }
-    //var lecture = JSON.parse(message);
-    //console.log('received: %s', lecture.millis);
   });
 
   ws.on('close', function() {

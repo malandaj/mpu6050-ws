@@ -4,11 +4,12 @@
 #include "I2Cdev.h"
 #include "MPU6050.h"
 #include "Wire.h"
+#include <vector>
 
 MPU6050 accelgyro;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
-int16_t cont=1;
+unsigned long cont=1;
 
 WebSocketsClient webSocket;
 const char* ssid     = "sensor";
@@ -22,13 +23,30 @@ bool ban = false;
 unsigned long previousMillis = 0;
 const long interval = 10;
 
+struct SensorData {
+   const char* ID;
+   int16_t aX;
+   int16_t aY;
+   int16_t aZ;
+   int16_t gX;
+   int16_t gY;
+   int16_t gZ;
+   unsigned long prevMillis;
+   int16_t conta;
+};
+
+const int BUFFER_SIZE = JSON_OBJECT_SIZE(2) + JSON_ARRAY_SIZE(35);
+
+static std::vector<struct SensorData> vData(4);
+int counter = 0;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   Serial.println();
-  
-  Serial.println("local ip");
-  Serial.println(WiFi.localIP());
+
+  //connect to WiFi
+  setupWiFi();
 
   //Configure connection to mpu6050
   setupMPU();
@@ -36,6 +54,20 @@ void setup() {
   //Configure ws connection
   webSocket.begin(ws_server, ws_port);
   webSocket.onEvent(webSocketEvent);
+
+  vData.clear();
+}
+
+void setupWiFi(){
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected");  
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
 }
 
 void setupMPU(){
@@ -73,36 +105,32 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
   }
 }
 
-struct SensorData {
-   const char* ID;
-   int16_t aX;
-   int16_t aY;
-   int16_t aZ;
-   int16_t gX;
-   int16_t gY;
-   int16_t gZ;
-   unsigned long prevMillis;
-   int16_t conta;
-};
-
-#define SENSORDATA_JSON_SIZE (JSON_OBJECT_SIZE(9))
-
-String serialize(const struct SensorData& data)
-{
-    StaticJsonBuffer<SENSORDATA_JSON_SIZE> jsonBuffer;
+String serialize(){
+    StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
     JsonObject& root = jsonBuffer.createObject();
-    root["ID"] = data.ID;
-    root["aX"] = data.aX;
-    root["aY"] = data.aY;
-    root["aZ"] = data.aZ;
-    root["gX"] = data.gX;
-    root["gY"] = data.gY;
-    root["gZ"] = data.gZ;
-    root["millis"] = data.prevMillis;
-    root["cont"] = data.conta;
-    String datos;
-    root.printTo(datos);
-    return datos;
+    root["ID"] = "sensor1";
+    JsonArray& lect = root.createNestedArray("lectures");
+    for(int x=0; x < 4; x++){
+      lect.add(vData[x].aX);
+      lect.add(vData[x].aY);
+      lect.add(vData[x].aZ);
+      lect.add(vData[x].gX);
+      lect.add(vData[x].gY);
+      lect.add(vData[x].gZ);
+      lect.add(vData[x].prevMillis);
+      lect.add(vData[x].conta);
+    }
+    String JSON;
+    root.printTo(JSON);
+    return JSON;
+}
+
+void sendData(){
+  String json = serialize();
+  webSocket.sendTXT(json);
+  //Serial.println(json);
+  vData.clear();
+  counter=0;
 }
 
 void loop() {
@@ -114,9 +142,12 @@ void loop() {
     if(ban){
       accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
       SensorData data = {"Sensor1", ax, ay, az, gx, gy, gz, previousMillis, cont};
-      String json = serialize(data);
+      vData.push_back(data);
+      counter++;
       cont++;
-      webSocket.sendTXT(json);
+      if(counter==4){
+        sendData();
+      }
     }
   }
 }
