@@ -4,105 +4,62 @@ var server = require('http').createServer()
   , wss = new WebSocketServer({ server: server })
   , express = require('express')
   , app = express()
-  , port = 8080;
+  , router = express.Router()
+  , port = 8080
+  , path = require('path');
 
-var path = require('path');
-var saving = false;
-
-const low = require('lowdb');
-const storage = require('lowdb/lib/file-async')
-
-var db = low()
-const fs = require('fs')
-
-//init
-db.defaults({ lectures: [] })
-  .value()
-var lectures = db.get('lectures', [])
-
-// view engine setup
+// setup express middleware //
+app.use(router);
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Router //
+router.use(function(req, res, next) {
+  // .. some logic here .. like any other middleware
+  next();
+});
 
-app.get('/', function (req, res) {
+router.get('/', function (req, res) {
   res.render('index');
 });
 
-app.get('/downloadData', function (req, res){
-  console.log('enviar archivo');
-  var file = __dirname + '/db.json';
-  res.download(file);
-})
-
+//------ web sockets ------//
+//list of clients and sensors
 var clients = [];
 var sensors = [];
+
 wss.on('connection', function connection(ws) {
-  console.log(ws.protocol);
+  var location = url.parse(ws.upgradeReq.url, true);
   if(ws.protocol == "client"){
     console.log("agregar navegador");
     clients.push(ws);
-  }else{
-    console.log("agregar sensor");
+  }else {
+    console.log("agregar esp8266");
     sensors.push(ws);
   }
+  // you might use location.query.access_token to authenticate or share sessions
+  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
   ws.on('message', function incoming(message) {
-    //console.log(message);
+    //console.log('received: %s', message);
     if(message == "startPreview"){
       sensors.forEach(function(sensor) {
-        sensor.send('1', function ack(error){
+        sensor.send('1', function ack(error) {
           // if error is not defined, the send has been completed,
           // otherwise the error object will indicate what failed.
         });
       });
-    }else if(message == "startSaving"){
-      saving = true;
-      console.log("Start saving");
-    }else if(message == "stopSaving"){
-      saving = false;
-      console.log("Stop saving");
-      prepareFiles();
     }else{
-      if(saving){
-        //console.log(message);
-        lectures.push(message).value()
-      }
-      // clients.forEach(function(client) {
-      //   client.send(message, function ack(error){
-      //     // if error is not defined, the send has been completed,
-      //     // otherwise the error object will indicate what failed.
-      //   });
-      // });
-      parsed = JSON.parse(message);
-      console.log(parsed);
-    }
-  });
-
-  ws.on('close', function() {
-    //remove the client from clients list
-    if (clients[ws] != null){
-      delete clients[ws];
-      console.log('Quitar cliente');
+      clients.forEach(function(client){
+        client.send(message,function ack(error){
+          // if error is not defined, the send has been completed,
+          // otherwise the error object will indicate what failed.
+        });
+      });
     }
   });
 });
-
-function prepareFiles(){
-  var sensorNames = [];
-  var res = {};
-  console.log('Preparar archivos');
-  data = db.getState().lectures;
-  fs.writeFileSync('db.json', JSON.stringify(data, null, '\t'))
-  clients.forEach(function(client) {
-    client.send("fileRdy", function ack(error){
-      // if error is not defined, the send has been completed,
-      // otherwise the error object will indicate what failed.
-    });
-  });
-  //console.log(data);
-}
 
 server.on('request', app);
 server.listen(port, function () { console.log('Listening on ' + server.address().port) });

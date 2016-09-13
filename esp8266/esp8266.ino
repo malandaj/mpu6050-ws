@@ -108,7 +108,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
 String serialize(){
     StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
     JsonObject& root = jsonBuffer.createObject();
-    root["ID"] = "sensor1";
+    root["ID"] = vData[0].ID;
     JsonArray& lect = root.createNestedArray("lectures");
     for(int x=0; x < 4; x++){
       lect.add(vData[x].aX);
@@ -141,7 +141,7 @@ void loop() {
     previousMillis = currentMillis;
     if(ban){
       accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-      SensorData data = {"Sensor1", ax, ay, az, gx, gy, gz, previousMillis, cont};
+      SensorData data = {"1", ax, ay, az, gx, gy, gz, previousMillis, cont};
       vData.push_back(data);
       counter++;
       cont++;
