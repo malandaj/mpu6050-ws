@@ -3,6 +3,7 @@ var banSave = false;
 var ws;
 var dps = new Array();
 var nSensors = 1;
+var nLecPackage = 5; // Number of lectures per JSON package
 var charts = new Array();
 
 window.onload = function () {
@@ -21,7 +22,7 @@ window.onload = function () {
 
 function setupWebSocket(){
 	var host = window.document.location.host.replace(/:.*/, '');
-	ws = new WebSocket('ws://' + host + ':8080', 'client');
+	ws = new WebSocket('ws://' + host + ':3000', 'client');
 
 	// Log errors
 	ws.onerror = function (error) {
@@ -31,22 +32,27 @@ function setupWebSocket(){
 	// Log messages from the server
 	ws.onmessage = function (e) {
 	  var lectures = JSON.parse(e.data);
-		for(i = 0; i < 4; i++){
+		for(i = 0; i < nLecPackage; i++){
 			for(j = 0; j < 8; j++){
 				var index = (8 * i)+j;
 				dps[lectures.ID - 1][j].push({
 					x: lectures.lectures[(8 * i)+7],
 					y: lectures.lectures[index]
 				})
-				//console.log(lectures.lectures[(8 * i)+7]);
+				console.log(lectures.lectures[(8 * i)+6]);
 			}
 		}
 
-		var dataLength = 300; // number of dataPoints visible at any point
+		// var sum = 0;
+		// for(i=0; i < dps[0][6].length - 1; i++){
+		// 	sum += (dps[0][6][i + 1].y) - (dps[0][6][i].y)
+		// }
+
+		var dataLength = 1000; // number of dataPoints visible at any point - 10 seconds
 		if(dps[nSensors - 1][7].length == dataLength){
 			for(i = 0; i < nSensors; i++){
 				for(j = 0; j < 8; j++){
-					for(z = 0; z < 4; z++)
+					for(z = 0; z < nLecPackage; z++)
 						dps[nSensors - 1][j].shift();
 				}
 			}

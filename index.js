@@ -5,8 +5,9 @@ var server = require('http').createServer()
   , express = require('express')
   , app = express()
   , router = express.Router()
-  , port = 8080
-  , path = require('path');
+  , port = 3000
+  , path = require('path')
+  , os = require('os');
 
 // setup express middleware //
 app.use(router);
@@ -62,4 +63,18 @@ wss.on('connection', function connection(ws) {
 });
 
 server.on('request', app);
-server.listen(port, function () { console.log('Listening on ' + server.address().port) });
+server.listen(port, rdy);
+
+function rdy() {
+  var interfaces = os.networkInterfaces();
+  var addresses = [];
+  for (var k in interfaces) {
+    for (var k2 in interfaces[k]) {
+      var address = interfaces[k][k2];
+      if (address.family === 'IPv4' && !address.internal) {
+        addresses.push(address.address);
+      }
+    }
+  }
+  console.log('Listening on ' + addresses[0] + ':' + server.address().port)
+}

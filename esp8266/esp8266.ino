@@ -14,8 +14,8 @@ unsigned long cont=1;
 WebSocketsClient webSocket;
 const char* ssid     = "sensor";
 const char* password = "1234567278";
-const char* ws_server = "148.226.154.129";
-int ws_port = 8080;
+const char* ws_server = "192.168.0.102";
+int ws_port = 3000;
 
 //flag for sending data
 bool ban = false;
@@ -35,9 +35,9 @@ struct SensorData {
    int16_t conta;
 };
 
-const int BUFFER_SIZE = JSON_OBJECT_SIZE(2) + JSON_ARRAY_SIZE(35);
+const int BUFFER_SIZE = JSON_OBJECT_SIZE(2) + JSON_ARRAY_SIZE(42);
 
-static std::vector<struct SensorData> vData(4);
+static std::vector<struct SensorData> vData(5);
 int counter = 0;
 
 void setup() {
@@ -110,7 +110,7 @@ String serialize(){
     JsonObject& root = jsonBuffer.createObject();
     root["ID"] = vData[0].ID;
     JsonArray& lect = root.createNestedArray("lectures");
-    for(int x=0; x < 4; x++){
+    for(int x=0; x < 5; x++){
       lect.add(vData[x].aX);
       lect.add(vData[x].aY);
       lect.add(vData[x].aZ);
@@ -145,7 +145,7 @@ void loop() {
       vData.push_back(data);
       counter++;
       cont++;
-      if(counter==4){
+      if(counter==5){
         sendData();
       }
     }
