@@ -9,6 +9,9 @@ var server = require('http').createServer()
   , path = require('path')
   , os = require('os');
 
+const low = require('lowdb')
+const fileAsync = require('lowdb/lib/file-async')
+
 // setup express middleware //
 app.use(router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -32,6 +35,7 @@ var sensors = [];
 
 wss.on('connection', function connection(ws) {
   var location = url.parse(ws.upgradeReq.url, true);
+  console.log(ws.protocol);
   if(ws.protocol == "client"){
     console.log("agregar navegador");
     clients.push(ws);
@@ -58,6 +62,8 @@ wss.on('connection', function connection(ws) {
           // otherwise the error object will indicate what failed.
         });
       });
+      // var parsed = JSON.parse(message);
+      // console.log(parsed);
     }
   });
 });

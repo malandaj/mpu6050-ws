@@ -14,7 +14,7 @@ unsigned long cont=1;
 WebSocketsClient webSocket;
 const char* ssid     = "sensor";
 const char* password = "1234567278";
-const char* ws_server = "192.168.0.102";
+const char* ws_server = "148.226.154.107";
 int ws_port = 3000;
 
 //flag for sending data
@@ -82,12 +82,13 @@ void setupMPU(){
   Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 
   //Add calibration offsets
-  accelgyro.setXAccelOffset(-4510);
-  accelgyro.setYAccelOffset(-1840);
-  accelgyro.setZAccelOffset(1150);
-  accelgyro.setXGyroOffset(50);
-  accelgyro.setYGyroOffset(-15);
-  accelgyro.setZGyroOffset(24);
+  //Sensor 1 - 4G
+  accelgyro.setXAccelOffset(-4396);
+  accelgyro.setYAccelOffset(-1897);
+  accelgyro.setZAccelOffset(1111);
+  accelgyro.setXGyroOffset(58);
+  accelgyro.setYGyroOffset(-26);
+  accelgyro.setZGyroOffset(12);
 }
 
 
@@ -141,7 +142,7 @@ void loop() {
     previousMillis = currentMillis;
     if(ban){
       accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-      SensorData data = {"1", ax, ay, az, gx, gy, gz, previousMillis, cont};
+      SensorData data = {"2", ax, ay, az, gx, gy, gz, previousMillis, cont};
       vData.push_back(data);
       counter++;
       cont++;

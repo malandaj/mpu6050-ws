@@ -2,7 +2,7 @@ var banPreview = false;
 var banSave = false;
 var ws;
 var dps = new Array();
-var nSensors = 1;
+var nSensors = 2;
 var nLecPackage = 5; // Number of lectures per JSON package
 var charts = new Array();
 
@@ -39,7 +39,7 @@ function setupWebSocket(){
 					x: lectures.lectures[(8 * i)+7],
 					y: lectures.lectures[index]
 				})
-				console.log(lectures.lectures[(8 * i)+6]);
+				//console.log(lectures.lectures[(8 * i)+6]);
 			}
 		}
 
@@ -48,12 +48,12 @@ function setupWebSocket(){
 		// 	sum += (dps[0][6][i + 1].y) - (dps[0][6][i].y)
 		// }
 
-		var dataLength = 1000; // number of dataPoints visible at any point - 10 seconds
+		var dataLength = 500; // number of dataPoints visible at any point - 10 seconds
 		if(dps[nSensors - 1][7].length == dataLength){
 			for(i = 0; i < nSensors; i++){
 				for(j = 0; j < 8; j++){
 					for(z = 0; z < nLecPackage; z++)
-						dps[nSensors - 1][j].shift();
+						dps[i][j].shift();
 				}
 			}
 		}

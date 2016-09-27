@@ -41,11 +41,15 @@ html(lang='en')
           button#btnStartSaving.btn.btn-lg.btn-primary-outline(type='button' onclick='startSaving()') Start saving data
       .hr-divider.m-t.m-b-md
         h3.hr-divider-content.hr-divider-heading Quick stats
-      .row.text-center.m-t-lg
-        .col-sm.m-b-md
+      #content.row.text-center.m-t-lg
+        .col-sm-6.m-b-md
           h3 Sensor 1
           .w-full.m-x-auto
             #sensor1(style='height: 500px; width:100%;')
+        .col-sm-6.m-b-md
+          h3 Sensor 2
+          .w-full.m-x-auto
+            #sensor2(style='height: 500px; width:100%;')
     // Include jQuery (required) and the JS
     script(src='js/jquery.min.js')
     script(src='js/toolkit.min.js')
