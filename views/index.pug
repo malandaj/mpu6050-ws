@@ -14,7 +14,7 @@ html(lang='en')
     link(href='css/toolkit.min.css', rel='stylesheet')
     link(href='css/application.css', rel='stylesheet')
     link(href='css/nprogress.css', rel='stylesheet')
-    link(rel='stylesheet', type='text/css', href='css/sweetalert.css')
+    link(href='css/sweetalert2.min.css', rel='stylesheet')
   body.with-top-navbar
     nav.navbar.navbar-inverse.navbar-fixed-top
       .container-fluid.container-fluid-spacious
@@ -39,6 +39,7 @@ html(lang='en')
         .btn-toolbar.dashhead-toolbar
           button#btnStartPreview.btn.btn-lg.btn-primary-outline(type='button' onclick='startPreview()') Start preview data
           button#btnStartSaving.btn.btn-lg.btn-primary-outline(type='button' onclick='startSaving()') Start saving data
+          button#btnCalibrate.btn.btn-lg.btn-primary-outline(type='button' onclick='calibrate()') Calibrate sensors
       .hr-divider.m-t.m-b-md
         h3.hr-divider-content.hr-divider-heading Quick stats
       #content.row.text-center.m-t-lg
@@ -54,6 +55,6 @@ html(lang='en')
     script(src='js/jquery.min.js')
     script(src='js/toolkit.min.js')
     script(src='js/canvasjs.min.js')
-    script(src='js/sweetalert.min.js')
     script(src='js/nprogress.js')
+    script(src='js/sweetalert2.min.js')
     script(src='js/funciones.js')

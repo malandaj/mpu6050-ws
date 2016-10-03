@@ -5,6 +5,7 @@ var dps = new Array();
 var nSensors = 2;
 var nLecPackage = 5; // Number of lectures per JSON package
 var charts = new Array();
+var calibrated = 0;
 
 window.onload = function () {
 	document.getElementById("btnStartSaving").disabled = true;
@@ -31,15 +32,29 @@ function setupWebSocket(){
 
 	// Log messages from the server
 	ws.onmessage = function (e) {
-	  var lectures = JSON.parse(e.data);
-		for(i = 0; i < nLecPackage; i++){
-			for(j = 0; j < 8; j++){
-				var index = (8 * i)+j;
-				dps[lectures.ID - 1][j].push({
-					x: lectures.lectures[(8 * i)+7],
-					y: lectures.lectures[index]
-				})
-				//console.log(lectures.lectures[(8 * i)+6]);
+		try{
+			var lectures = JSON.parse(e.data);
+			for(i = 0; i < nLecPackage; i++){
+				for(j = 0; j < 8; j++){
+					var index = (8 * i)+j;
+					dps[lectures.ID - 1][j].push({
+						x: lectures.lectures[(8 * i)+7],
+						y: lectures.lectures[index]
+					})
+					console.log(lectures.lectures[(8 * i)+6]);
+				}
+			}
+		}catch(e){
+			calibrated += 1;
+			if(calibrated == nSensors){
+				console.log("Calibration Complete");
+				NProgress.done();
+				swal.close();
+				swal(
+				  'Success',
+				  'Calibration complete!',
+				  'success'
+				)
 			}
 		}
 
@@ -67,11 +82,12 @@ function startPreview(){
 	if (banPreview){
 		$("#btnStartPreview").html('Stop data');
 		document.getElementById("btnStartSaving").disabled = false;
+		ws.send("startPreview");
 	}else{
 		$("#btnStartPreview").html('Start data');
 		document.getElementById("btnStartSaving").disabled = true;
+		ws.send("stopPreview");
 	}
-	ws.send("startPreview");
 }
 
 function startSaving(){
@@ -82,10 +98,39 @@ function startSaving(){
 	}else{
 		$("#btnStartSaving").html('Start saving data');
 		ws.send("stopSaving");
-		NProgress.start();
 		$("#btnStartPreview").html('Start data');
-		ws.send("startPreview");
 	}
+}
+
+// function calibrate() {
+// 	ws.send("calibrate")
+// 	NProgress.start();
+// 	indeterminateProgress.start();
+// }
+
+function calibrate(){
+	swal({
+	  title: 'Calibration',
+	  text: 'Your MPU6050 should be placed in horizontal position, with package letters facing up. Don\'t touch it until you see a finish message.',
+	  type: 'info',
+		allowOutsideClick: false,
+		allowEscapeKey: false,
+	  showCancelButton: true,
+		confirmButtonColor: '#1CA8DD',
+		cancelButtonColor: '#d33',
+	  confirmButtonText: 'Start calibration',
+	}).then(function() {
+		ws.send("calibrate")
+		NProgress.start();
+	  swal({
+			title: 'Calibration in progress',
+			text: 'Please wait. Don\'t touch the sensor until you see a finish message.',
+			type: 'info',
+			showConfirmButton: false,
+			allowOutsideClick: false,
+			allowEscapeKey: false
+		})
+	});
 }
 
 function setupPlots() {

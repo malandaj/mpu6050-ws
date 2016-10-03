@@ -50,7 +50,21 @@ wss.on('connection', function connection(ws) {
     //console.log('received: %s', message);
     if(message == "startPreview"){
       sensors.forEach(function(sensor) {
-        sensor.send('1', function ack(error) {
+        sensor.send(message, function ack(error) {
+          // if error is not defined, the send has been completed,
+          // otherwise the error object will indicate what failed.
+        });
+      });
+    }else if(message == "stopPreview"){
+      sensors.forEach(function(sensor) {
+        sensor.send(message, function ack(error) {
+          // if error is not defined, the send has been completed,
+          // otherwise the error object will indicate what failed.
+        });
+      });
+    }else if(message == "calibrate"){
+      sensors.forEach(function(sensor) {
+        sensor.send(message, function ack(error) {
           // if error is not defined, the send has been completed,
           // otherwise the error object will indicate what failed.
         });
