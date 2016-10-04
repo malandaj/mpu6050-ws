@@ -315,7 +315,7 @@ void loop() {
     previousMillis = currentMillis;
     if(ban){
       accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-      SensorData data = {"1", ax, ay, az, gx, gy, gz, previousMillis, cont};
+      SensorData data = {"2", ax, ay, az, gx, gy, gz, previousMillis, cont};
       vData.push_back(data);
       counter++;
       cont++;

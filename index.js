@@ -9,8 +9,18 @@ var server = require('http').createServer()
   , path = require('path')
   , os = require('os');
 
+//const fs = require('fs')
 const low = require('lowdb')
 const fileAsync = require('lowdb/lib/file-async')
+
+// Start database using file-async storage
+const db = low('db.json', {
+  storage: fileAsync,
+  writeOnChange: false
+})
+
+db.defaults({ lectures: [] })
+  .value()
 
 // setup express middleware //
 app.use(router);
@@ -32,6 +42,7 @@ router.get('/', function (req, res) {
 //list of clients and sensors
 var clients = [];
 var sensors = [];
+var saving = false;
 
 wss.on('connection', function connection(ws) {
   var location = url.parse(ws.upgradeReq.url, true);
@@ -69,6 +80,14 @@ wss.on('connection', function connection(ws) {
           // otherwise the error object will indicate what failed.
         });
       });
+    }else if(message == "startSaving"){
+      saving = true;
+      db.set('lectures', [])
+        .value()
+    }else if(message == "stopSaving"){
+      saving = false;
+      //fs.writeFileSync('db.json', JSON.stringify(db.getState()));
+      db.write()
     }else{
       clients.forEach(function(client){
         client.send(message,function ack(error){
@@ -76,12 +95,18 @@ wss.on('connection', function connection(ws) {
           // otherwise the error object will indicate what failed.
         });
       });
-      // var parsed = JSON.parse(message);
-      // console.log(parsed);
+      if(saving){
+        //var parsed = JSON.parse(message);
+        //.push({id: parsed.ID, lectures: parsed.lectures})
+        db.get('lectures')
+          .push({lectures: message})
+          .value()
+      }
     }
   });
 });
 
+//------ server declaration ------//
 server.on('request', app);
 server.listen(port, rdy);
 

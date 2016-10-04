@@ -2,7 +2,7 @@ var banPreview = false;
 var banSave = false;
 var ws;
 var dps = new Array();
-var nSensors = 2;
+var nSensors = 2;			// Number of sensors
 var nLecPackage = 5; // Number of lectures per JSON package
 var charts = new Array();
 var calibrated = 0;
@@ -98,15 +98,10 @@ function startSaving(){
 	}else{
 		$("#btnStartSaving").html('Start saving data');
 		ws.send("stopSaving");
+		startPreview();
 		$("#btnStartPreview").html('Start data');
 	}
 }
-
-// function calibrate() {
-// 	ws.send("calibrate")
-// 	NProgress.start();
-// 	indeterminateProgress.start();
-// }
 
 function calibrate(){
 	swal({
