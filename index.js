@@ -7,17 +7,16 @@ var server = require('http').createServer()
   , router = express.Router()
   , port = 3000
   , path = require('path')
-  , os = require('os');
+  , os = require('os')
+  , CSV = require('comma-separated-values')
+  , fs = require('fs');
 
 //const fs = require('fs')
 const low = require('lowdb')
 const fileAsync = require('lowdb/lib/file-async')
 
 // Start database using file-async storage
-const db = low('db.json', {
-  storage: fileAsync,
-  writeOnChange: false
-})
+const db = low()
 
 db.defaults({ lectures: [] })
   .value()
@@ -37,6 +36,46 @@ router.use(function(req, res, next) {
 router.get('/', function (req, res) {
   res.render('index');
 });
+
+router.get('/loadJson', function (req, res) {
+  res.render('loadJson');
+});
+
+router.get('/sendFile', function(req, res){
+  processData();
+  //res.download('db.json', 'db.json');
+});
+
+function processData(){
+  const rawData = low('data.json', {
+    storage: fileAsync,
+    writeOnChange: false
+  })
+  rawData.defaults({ lectures: [] })
+    .value()
+  rawData.set('lectures', [])
+    .value()
+  db.get('lectures')
+    .forEach(function(value){
+        var parsed = JSON.parse(value.lectures);
+        for(i = 0; i < 5; i++){
+          rawData.get('lectures')
+            .push({cont: parsed.lectures[(8*i)+7], accX: parsed.lectures[(8*i)+0], accY: parsed.lectures[(8*i)+1], accZ: parsed.lectures[(8*i)+2], gyroX: parsed.lectures[(8*i)+3], gyroY: parsed.lectures[(8*i)+4], gyroZ: parsed.lectures[(8*i)+5], millis: parsed.lectures[(8*i)+6], id:parsed.ID})
+            .value()
+        }
+      })
+    .value()
+  rawData.write();
+  jsonData = rawData.getState()
+  var csvData = new CSV(jsonData.lectures, {header: true}).encode();
+  console.log(csvData);
+  fs.writeFile('data.csv', csvData, function(err){
+    if(err){
+      return console.log(err);
+    }
+    console.log("the file was saved");
+  })
+}
 
 //------ web sockets ------//
 //list of clients and sensors
@@ -86,8 +125,7 @@ wss.on('connection', function connection(ws) {
         .value()
     }else if(message == "stopSaving"){
       saving = false;
-      //fs.writeFileSync('db.json', JSON.stringify(db.getState()));
-      db.write()
+      processData();
     }else{
       clients.forEach(function(client){
         client.send(message,function ack(error){
@@ -96,8 +134,6 @@ wss.on('connection', function connection(ws) {
         });
       });
       if(saving){
-        //var parsed = JSON.parse(message);
-        //.push({id: parsed.ID, lectures: parsed.lectures})
         db.get('lectures')
           .push({lectures: message})
           .value()

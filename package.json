@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/erolanda/mpu6050-ws#readme",
   "dependencies": {
+    "comma-separated-values": "^3.6.4",
     "express": "^4.14.0",
     "lodash": "^4.16.2",
     "lowdb": "^0.13.1",

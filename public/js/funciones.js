@@ -9,6 +9,8 @@ var calibrated = 0;
 
 window.onload = function () {
 	document.getElementById("btnStartSaving").disabled = true;
+	document.getElementById("btnExport").disabled = true;
+	document.getElementById("btnExport").style.visibility = 'hidden';
 	$('#btnDownload').attr('disabled', true);
 	$('#btnDownload').bind('click', false);
 	for (i=0; i < nSensors; i++){
@@ -99,6 +101,8 @@ function startSaving(){
 		$("#btnStartSaving").html('Start saving data');
 		ws.send("stopSaving");
 		startPreview();
+		document.getElementById("btnExport").disabled = false;
+		document.getElementById("btnExport").style.visibility = 'visible';
 		$("#btnStartPreview").html('Start data');
 	}
 }
@@ -126,6 +130,12 @@ function calibrate(){
 			allowEscapeKey: false
 		})
 	});
+}
+
+function download(){
+	var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open( "GET", 'sendFile', true ); // false for synchronous request
+  xmlHttp.send( null );
 }
 
 function setupPlots() {
