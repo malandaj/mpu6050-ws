@@ -1,45 +1,45 @@
 doctype html
 html(lang='en')
-  head
-    // These meta tags come first.
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    meta(name='description', content='')
-    meta(name='keywords', content='')
-    meta(name='author', content='Miguel Landa')
-    title Titulo
-    // Include the CSS
-    link(href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic', rel='stylesheet')
-    link(href='css/toolkit.min.css', rel='stylesheet')
-    link(href='css/application.css', rel='stylesheet')
-  body.with-top-navbar
-    nav.navbar.navbar-inverse.navbar-fixed-top
-      .container-fluid.container-fluid-spacious
-        .navbar-header
-          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
-            span.sr-only Toggle navigation
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.navbar-brand.navbar-brand-emphasized(href='#')
-            span.icon.icon-leaf.navbar-brand-icon
-            |   Dashboard
-        #navbar.navbar-collapse.collapse
-          ul.nav.navbar-nav
-            li
-              a(href='/') Real time status
-            li.active
-              a(href='#') Load JSON database
-    .container-fluid.container-fluid-spacious
-      .dashhead.m-t-md
-        .dashhead-titles
-          h6.dashhead-subtitle Dashboards
-          h2.dashhead-title Overview
-      .hr-divider.m-t.m-b-md
-        h3.hr-divider-content.hr-divider-heading Quick stats
-    // Include jQuery (required) and the JS
-    script(src='js/jquery.min.js')
-    script(src='js/toolkit.min.js')
-    script(src='js/canvasjs.min.js')
-    script(src='js/loadData.js')
+    head
+        // These meta tags come first.
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        meta(name='description', content='')
+        meta(name='keywords', content='')
+        meta(name='author', content='Miguel Landa')
+        title Titulo
+        // Include the CSS
+        link(href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic', rel='stylesheet')
+        link(href='css/toolkit.min.css', rel='stylesheet')
+        link(href='css/application.css', rel='stylesheet')
+    body.with-top-navbar
+        nav.navbar.navbar-inverse.navbar-fixed-top
+            .container-fluid.container-fluid-spacious
+                .navbar-header
+                    button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand.navbar-brand-emphasized(href='#')
+                        span.icon.icon-leaf.navbar-brand-icon
+                        |   Dashboard
+                #navbar.navbar-collapse.collapse
+                    ul.nav.navbar-nav
+                        li
+                            a(href='/') Real time status
+                        li.active
+                            a(href='#') Load JSON database
+        .container-fluid.container-fluid-spacious
+            .dashhead.m-t-md
+                .dashhead-titles
+                    h6.dashhead-subtitle Dashboards
+                    h2.dashhead-title Overview
+            .hr-divider.m-t.m-b-md
+                h3.hr-divider-content.hr-divider-heading Quick stats
+        // Include jQuery (required) and the JS
+        script(src='js/jquery.min.js')
+        script(src='js/toolkit.min.js')
+        script(src='js/canvasjs.min.js')
+        script(src='js/loadData.js')
