@@ -32,7 +32,7 @@ html(lang='en')
             li.active
               a(href='#') Real time status
             li
-              a(href='loadJson') Load JSON database
+              a(href='view') Load JSON database
     .container-fluid.container-fluid-spacious
       .dashhead.m-t-md
         .dashhead-titles
@@ -53,7 +53,8 @@ html(lang='en')
           h3 Sensor 2
           .w-full.m-x-auto
             #sensor2(style='height: 500px; width:100%;')
-        button#btnExport.btn.btn-lg.btn-primary-outline(type='button' onclick='download()') Download Data
+        a#btnExport.btn.btn-lg.btn-primary-outline(role='button' href='sendFile') Download Data
+        a#btnView.btn.btn-lg.btn-primary-outline(role='button' href='view') View Data
     // Include jQuery (required) and the JS
     script(src='js/jquery.min.js')
     script(src='js/toolkit.min.js')

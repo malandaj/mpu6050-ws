@@ -37,13 +37,14 @@ router.get('/', function (req, res) {
   res.render('index');
 });
 
-router.get('/loadJson', function (req, res) {
-  res.render('loadJson');
+router.get('/view', function (req, res) {
+  res.render('view');
 });
 
 router.get('/sendFile', function(req, res){
-  processData();
-  //res.download('db.json', 'db.json');
+  //processData();
+  console.log('send file');
+  res.download(__dirname + '/data.csv', 'data.csv');
 });
 
 function processData(){
