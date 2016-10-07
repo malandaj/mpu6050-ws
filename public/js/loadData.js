@@ -10,81 +10,75 @@ window.onload = function() {
         }
         csvLines = csv.split(/[\r?\n|\r|\n]+/);
         headers = csvLines.shift();
+        //console.log(headers);
         var counters = [];
         for (var i = 0; i < csvLines.length; i++)
             if (csvLines[i].length > 0) {
                 points = csvLines[i].split(",");
                 var id = points[8];
                 id = id.replace(/"/g, "");
-                for(j = 1; j < 7; j++){
-                    dataPoints[parseInt(id)-1][j-1].push({
-                            x: parseInt(points[0]),
-                            y: parseInt(points[j])
+                for (j = 1; j < 7; j++) {
+                    dataPoints[parseInt(id) - 1][j - 1].push({
+                        x: parseInt(points[0]),
+                        y: parseInt(points[j])
                     });
                 }
             }
-        return dataPoints;
+        return {
+            header: headers,
+            data : dataPoints[0].concat(dataPoints[1])
+        };
     }
 
     $.get("sendFile", function(data) {
-        var dps = getDataPointsFromCSV(data);
-        var charts = [];
-        for (i = 0; i < nSensors; i++) {
-            var name = "sensor".concat(i + 1);
-            charts[i] = new CanvasJS.Chart(name, {
-                backgroundColor: "transparent",
-                axisY: {
-                    gridColor: "rgba(255,255,255,.05)",
-                    tickColor: "rgba(255,255,255,.05)",
-                    labelFontColor: "#a2a2a2"
-                },
-                axisX: {
-                    labelFontColor: "#a2a2a2"
-                },
-                data: [{
-                    type: "line",
-                    showInLegend: true,
-                    name: "accX",
-                    dataPoints: dps[i][0]
-                }, {
-                    type: "line",
-                    showInLegend: true,
-                    name: "accY",
-                    dataPoints: dps[i][1]
-                }, {
-                    type: "line",
-                    showInLegend: true,
-                    name: "accZ",
-                    dataPoints: dps[i][2]
-                }, {
-                    type: "line",
-                    showInLegend: true,
-                    name: "gyroX",
-                    dataPoints: dps[i][3]
-                }, {
-                    type: "line",
-                    showInLegend: true,
-                    name: "gyroY",
-                    dataPoints: dps[i][4]
-                }, {
-                    type: "line",
-                    showInLegend: true,
-                    name: "gyroZ",
-                    dataPoints: dps[i][5]
-                }],
-                zoomEnabled: true,
-                legend: {
-                    cursor: "pointer",
-                    itemclick: function(e) {
-                        if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible)
-                            e.dataSeries.visible = false;
-                        else
-                            e.dataSeries.visible = true;
-                        e.chart.render();
-                    }
+        var obj = getDataPointsFromCSV(data);
+        var dps = obj.data;
+        var headers = obj.header;
+        console.log(headers);
+        var chart = new CanvasJS.Chart("sensors", {
+            backgroundColor: "transparent",
+            zoomEnabled: true,
+            exportEnabled: true,
+            axisY: {
+                gridColor: "rgba(255,255,255,.05)",
+                tickColor: "rgba(255,255,255,.05)",
+                labelFontColor: "#a2a2a2"
+            },
+            axisX: {
+                labelFontColor: "#a2a2a2"
+            },
+            data: [],
+            legend: {
+                cursor: "pointer",
+                itemclick: function(e) {
+                    if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible)
+                        e.dataSeries.visible = false;
+                    else
+                        e.dataSeries.visible = true;
+                    e.chart.render();
                 }
-            });
-            charts[i].render();
+            }
+        });
+        headers = headers.split(",");
+        var headerArray = [];
+        var cont = 1;
+        for(i = 0; i < nSensors*6; i++){
+            if(cont == 7)
+                cont = 1;
+            headerArray[i] = headers[cont].replace(/"/g, "");
+            cont = cont + 1;
         }
+        for (i = 0; i < dps.length; i++) {
+            var newSeries = {
+                type: "line",
+                label: headerArray[i],
+                toolTipContent: "{label}<br/>x: {x}, y: {y}",
+                dataPoints: dps[i],
+                showInLegend: true,
+                name: headerArray[i]
+            };
+            chart.options.data.push(newSeries);
+        }
+        chart.render();
     });
 };
