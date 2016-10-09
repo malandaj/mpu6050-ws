@@ -26,7 +26,7 @@ window.onload = function() {
             }
         return {
             header: headers,
-            data : dataPoints[0].concat(dataPoints[1])
+            data: dataPoints[0].concat(dataPoints[1])
         };
     }
 
@@ -64,10 +64,10 @@ window.onload = function() {
         var cont = 1;
         var sCount = 1;
         var sLabel = 'Sensor'
-        for(i = 0; i < nSensors*6; i++){
-            if(cont == 7){
-                    cont = 1;
-                    sCount = sCount + 1;
+        for (i = 0; i < nSensors * 6; i++) {
+            if (cont == 7) {
+                cont = 1;
+                sCount = sCount + 1;
             }
             headerArray[i] = sLabel.concat(' ' + sCount + ' ').concat(headers[cont].replace(/"/g, ""));
             cont = cont + 1;
