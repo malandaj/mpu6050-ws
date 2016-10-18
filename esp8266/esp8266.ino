@@ -16,7 +16,7 @@ unsigned long cont=1;
 WebSocketsClient webSocket;
 const char* ssid     = "sensor";
 const char* password = "1234567278";
-const char* ws_server = "148.226.154.166";
+const char* ws_server = "148.226.154.135";
 int ws_port = 3000;
 
 //flag for sending data
@@ -315,7 +315,7 @@ void loop() {
                 previousMillis = currentMillis;
                 if(ban) {
                         accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-                        SensorData data = {"1", ax, ay, az, gx, gy, gz, previousMillis, cont};
+                        SensorData data = {"2", ax, ay, az, gx, gy, gz, previousMillis, cont};
                         vData.push_back(data);
                         counter++;
                         cont++;
