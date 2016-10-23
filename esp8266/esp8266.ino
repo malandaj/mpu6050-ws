@@ -16,7 +16,7 @@ unsigned long cont=1;
 WebSocketsClient webSocket;
 const char* ssid     = "sensor";
 const char* password = "1234567278";
-const char* ws_server = "148.226.154.135";
+const char* ws_server = "192.168.0.2";
 int ws_port = 3000;
 
 //flag for sending data
@@ -34,7 +34,7 @@ struct SensorData {
         int16_t gY;
         int16_t gZ;
         unsigned long prevMillis;
-        int16_t conta;
+        unsigned long conta;
 };
 
 const int BUFFER_SIZE = JSON_OBJECT_SIZE(2) + JSON_ARRAY_SIZE(42);
