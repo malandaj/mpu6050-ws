@@ -6,7 +6,7 @@
 #include "Wire.h"
 #include <vector>
 
-//#define DEBUG_ON
+#define DEBUG_ON
 
 MPU6050 accelgyro;
 int16_t ax, ay, az;
@@ -16,7 +16,7 @@ unsigned long cont=1;
 WebSocketsClient webSocket;
 const char* ssid     = "sensor";
 const char* password = "1234567278";
-const char* ws_server = "192.168.0.2";
+const char* ws_server = "148.226.154.106";
 int ws_port = 3000;
 
 //flag for sending data

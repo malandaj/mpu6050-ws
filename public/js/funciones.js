@@ -44,7 +44,7 @@ function setupWebSocket() {
                     console.log(lectures.lectures[(8 * i) + 6]);
                 }
             }
-        } catch (e) {
+        } catch (e){
             calibrated += 1;
             if (calibrated == nSensors) {
                 console.log("Calibration Complete");
