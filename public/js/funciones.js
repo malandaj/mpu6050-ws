@@ -2,7 +2,7 @@ var banPreview = false;
 var banSave = false;
 var ws;
 var dps = [];
-var nSensors = 2; // Number of sensors
+var nSensors = 1; // Number of sensors
 var nLecPackage = 5; // Number of lectures per JSON package
 var charts = [];
 var calibrated = 0;

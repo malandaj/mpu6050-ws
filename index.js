@@ -100,11 +100,12 @@ function processData() {
 //list of clients and sensors
 var clients = [];
 var sensors = [];
+
+//save data or show only
 var saving = false;
 
 wss.on('connection', function connection(ws) {
     var location = url.parse(ws.upgradeReq.url, true);
-    console.log(ws.protocol);
     if (ws.protocol == "client") {
         console.log("agregar navegador");
         clients.push(ws);
@@ -112,11 +113,8 @@ wss.on('connection', function connection(ws) {
         console.log("agregar esp8266");
         sensors.push(ws);
     }
-    // you might use location.query.access_token to authenticate or share sessions
-    // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
     ws.on('message', function incoming(message) {
-        //console.log('received: %s', message);
         if (message == "startPreview") {
             sensors.forEach(function(sensor) {
                 sensor.send(message, function ack(error) {

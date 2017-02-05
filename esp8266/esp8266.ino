@@ -16,7 +16,7 @@ unsigned long cont=1;
 WebSocketsClient webSocket;
 const char* ssid     = "sensor";
 const char* password = "1234567278";
-const char* ws_server = "148.226.154.106";
+const char* ws_server = "192.168.0.100";
 int ws_port = 3000;
 
 //flag for sending data
@@ -37,9 +37,10 @@ struct SensorData {
         unsigned long conta;
 };
 
-const int BUFFER_SIZE = JSON_OBJECT_SIZE(2) + JSON_ARRAY_SIZE(42);
+const int BUFFER_SIZE = JSON_OBJECT_SIZE(2) + JSON_ARRAY_SIZE(80) + 200;
+uint8_t nLect = 5;
 
-static std::vector<struct SensorData> vData(5);
+static std::vector<struct SensorData> vData(nLect);
 int counter = 0;
 
 //Variables for calibration
@@ -284,7 +285,7 @@ String serialize(){
         JsonObject& root = jsonBuffer.createObject();
         root["ID"] = vData[0].ID;
         JsonArray& lect = root.createNestedArray("lectures");
-        for(int x=0; x < 5; x++) {
+        for(int x=0; x < nLect; x++) {
                 lect.add(vData[x].aX);
                 lect.add(vData[x].aY);
                 lect.add(vData[x].aZ);
@@ -315,11 +316,11 @@ void loop() {
                 previousMillis = currentMillis;
                 if(ban) {
                         accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-                        SensorData data = {"2", ax, ay, az, gx, gy, gz, previousMillis, cont};
+                        SensorData data = {"1", ax, ay, az, gx, gy, gz, previousMillis, cont};
                         vData.push_back(data);
                         counter++;
                         cont++;
-                        if(counter==5) {
+                        if(counter==nLect) {
                                 sendData();
                         }
                 }
