@@ -4246,7 +4246,7 @@ Source: AVX .. aphvc.pdf</description>
 <busses>
 </busses>
 <nets>
-<net name="N$1" class="0">
+<net name="RESET" class="0">
 <segment>
 <pinref part="ESP8266" gate="G$1" pin="RESET"/>
 <pinref part="R4" gate="G$1" pin="2"/>
@@ -4254,7 +4254,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="48.26" y1="96.52" x2="48.26" y2="101.6" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$2" class="0">
+<net name="CH_PD" class="0">
 <segment>
 <pinref part="ESP8266" gate="G$1" pin="CH_PD"/>
 <pinref part="R2" gate="G$1" pin="1"/>
@@ -4262,7 +4262,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="40.64" y1="91.44" x2="40.64" y2="101.6" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$4" class="0">
+<net name="GPIO15" class="0">
 <segment>
 <pinref part="ESP8266" gate="G$1" pin="GPIO15"/>
 <pinref part="R1" gate="G$1" pin="2"/>
@@ -4299,7 +4299,7 @@ Source: AVX .. aphvc.pdf</description>
 <junction x="48.26" y="78.74"/>
 </segment>
 </net>
-<net name="N$6" class="0">
+<net name="TX" class="0">
 <segment>
 <pinref part="ESP8266" gate="G$1" pin="TX"/>
 <wire x1="86.36" y1="96.52" x2="86.36" y2="101.6" width="0.1524" layer="91"/>
@@ -4308,7 +4308,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="73.66" y1="101.6" x2="73.66" y2="106.68" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$8" class="0">
+<net name="RX" class="0">
 <segment>
 <pinref part="ESP8266" gate="G$1" pin="RX"/>
 <wire x1="86.36" y1="93.98" x2="88.9" y2="93.98" width="0.1524" layer="91"/>
@@ -4318,7 +4318,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="78.74" y1="104.14" x2="78.74" y2="106.68" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$3" class="0">
+<net name="GPIO0" class="0">
 <segment>
 <pinref part="ESP8266" gate="G$1" pin="GPIO0"/>
 <pinref part="JMP" gate="1" pin="2"/>
@@ -4326,14 +4326,14 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="93.98" y1="86.36" x2="93.98" y2="93.98" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$9" class="0">
+<net name="PULLUP" class="0">
 <segment>
 <pinref part="JMP" gate="1" pin="3"/>
 <pinref part="R3" gate="G$1" pin="2"/>
 <wire x1="91.44" y1="93.98" x2="91.44" y2="101.6" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$10" class="0">
+<net name="SCL" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="SCL"/>
 <wire x1="109.22" y1="99.06" x2="104.14" y2="99.06" width="0.1524" layer="91"/>
@@ -4342,7 +4342,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="104.14" y1="91.44" x2="86.36" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$11" class="0">
+<net name="SDA" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="SDA"/>
 <wire x1="109.22" y1="93.98" x2="106.68" y2="93.98" width="0.1524" layer="91"/>
@@ -4351,7 +4351,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="106.68" y1="88.9" x2="86.36" y2="88.9" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$7" class="0">
+<net name="5V" class="0">
 <segment>
 <pinref part="LIPO" gate="-1" pin="S"/>
 <pinref part="U2" gate="G$1" pin="IN"/>
@@ -4359,7 +4359,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="15.24" y1="129.54" x2="15.24" y2="127" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$5" class="0">
+<net name="GND" class="0">
 <segment>
 <pinref part="LIPO" gate="-2" pin="S"/>
 <wire x1="12.7" y1="121.92" x2="12.7" y2="119.38" width="0.1524" layer="91"/>
