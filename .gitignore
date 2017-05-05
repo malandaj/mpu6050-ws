@@ -1,3 +1,6 @@
 node_modules/
 db.json
 .tern-project
+data.csv
+data.json
+metadata.json

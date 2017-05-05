@@ -13,6 +13,7 @@ var server = require('http').createServer(),
     CSV = require('comma-separated-values'),
     fs = require('fs');
 
+var archiver = require('archiver');
 //const fs = require('fs')
 const low = require('lowdb');
 const fileAsync = require('lowdb/lib/file-async');
@@ -115,35 +116,62 @@ wss.on('connection', function connection(ws) {
     }
 
     ws.on('message', function incoming(message) {
-        if (message == "startPreview") {
+        console.log(message);
+        var obj = JSON.parse(message);
+        if (obj.type == "startRecording") {
             sensors.forEach(function(sensor) {
-                sensor.send(message, function ack(error) {
+                sensor.send("startPreview", function ack(error) {
                     // if error is not defined, the send has been completed,
                     // otherwise the error object will indicate what failed.
                 });
             });
-        } else if (message == "stopPreview") {
-            sensors.forEach(function(sensor) {
-                sensor.send(message, function ack(error) {
-                    // if error is not defined, the send has been completed,
-                    // otherwise the error object will indicate what failed.
-                });
-            });
-        } else if (message == "calibrate") {
-            sensors.forEach(function(sensor) {
-                sensor.send(message, function ack(error) {
-                    // if error is not defined, the send has been completed,
-                    // otherwise the error object will indicate what failed.
-                });
-            });
-        } else if (message == "startSaving") {
             saving = true;
             db.set('lectures', [])
                 .value();
-        } else if (message == "stopSaving") {
+        } else if (obj.type == "stopRecording") {
+            sensors.forEach(function(sensor) {
+                sensor.send("stopPreview", function ack(error) {
+                    // if error is not defined, the send has been completed,
+                    // otherwise the error object will indicate what failed.
+                });
+            });
             saving = false;
             processData();
-        } else {
+            var output = fs.createWriteStream(__dirname + '/data.zip');
+            var archive = archiver('zip', {
+                zlib: { level: 9 } // Sets the compression level.
+            });
+
+            // listen for all archive data to be written
+            output.on('close', function() {
+              console.log(archive.pointer() + ' total bytes');
+              console.log('archiver has been finalized and the output file descriptor has closed.');
+            });
+
+            // good practice to catch this error explicitly
+            archive.on('error', function(err) {
+              throw err;
+            });
+
+            // pipe archive data to the file
+            archive.pipe(output);
+
+            archive.file('metadata.json', { name: 'metadata.json' });
+            archive.file('data.csv', { name: 'data.csv' });
+            archive.finalize();
+        } else if (obj.type == "calibrate") {
+            sensors.forEach(function(sensor) {
+                sensor.send(message, function ack(error) {
+                    // if error is not defined, the send has been completed,
+                    // otherwise the error object will indicate what failed.
+                });
+            });
+        } else if(obj.type == "patient"){
+          console.log(obj.name);
+          console.log(obj.observations);
+          fs.writeFile('metadata.json', JSON.stringify(obj, null, 4));
+        }
+        else {
             clients.forEach(function(client) {
                 client.send(message, function ack(error) {
                     // if error is not defined, the send has been completed,
