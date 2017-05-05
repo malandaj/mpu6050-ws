@@ -104,7 +104,7 @@ var sensors = [];
 
 //save data or show only
 var saving = false;
-
+var patientName;
 wss.on('connection', function connection(ws) {
     var location = url.parse(ws.upgradeReq.url, true);
     if (ws.protocol == "client") {
@@ -137,7 +137,25 @@ wss.on('connection', function connection(ws) {
             });
             saving = false;
             processData();
-            var output = fs.createWriteStream(__dirname + '/data.zip');
+        } else if (obj.type == "calibrate") {
+            sensors.forEach(function(sensor) {
+                sensor.send(message, function ack(error) {
+                    // if error is not defined, the send has been completed,
+                    // otherwise the error object will indicate what failed.
+                });
+            });
+        } else if(obj.type == "patient"){
+            patientName = obj.name;
+            fs.writeFile('metadata.json', JSON.stringify(obj, null, 4));
+        } else if(obj.type == "test"){
+            var d = new Date();
+            var day = d.getDate();
+            var month = d.getMonth() + 1;
+            var year = d.getFullYear();
+            var hour = d.getHours();
+            var minutes = d.getMinutes();
+            var seconds = d.getSeconds();
+            var output = fs.createWriteStream(__dirname + '/' + patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes + '-' + seconds +'.zip');
             var archive = archiver('zip', {
                 zlib: { level: 9 } // Sets the compression level.
             });
@@ -159,19 +177,7 @@ wss.on('connection', function connection(ws) {
             archive.file('metadata.json', { name: 'metadata.json' });
             archive.file('data.csv', { name: 'data.csv' });
             archive.finalize();
-        } else if (obj.type == "calibrate") {
-            sensors.forEach(function(sensor) {
-                sensor.send(message, function ack(error) {
-                    // if error is not defined, the send has been completed,
-                    // otherwise the error object will indicate what failed.
-                });
-            });
-        } else if(obj.type == "patient"){
-          console.log(obj.name);
-          console.log(obj.observations);
-          fs.writeFile('metadata.json', JSON.stringify(obj, null, 4));
-        }
-        else {
+        } else {
             clients.forEach(function(client) {
                 client.send(message, function ack(error) {
                     // if error is not defined, the send has been completed,
