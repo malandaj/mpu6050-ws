@@ -115,8 +115,11 @@ wss.on('connection', function connection(ws) {
         sensors.push(ws);
     }
 
+    ws.on('close', function close() {
+      console.log('disconnected');
+    });
+
     ws.on('message', function incoming(message) {
-        console.log(message);
         var obj = JSON.parse(message);
         if (obj.type == "startRecording") {
             sensors.forEach(function(sensor) {
@@ -147,15 +150,15 @@ wss.on('connection', function connection(ws) {
         } else if(obj.type == "patient"){
             patientName = obj.name;
             fs.writeFile('metadata.json', JSON.stringify(obj, null, 4));
-        } else if(obj.type == "test"){
+        } else if(obj.type == "saveZip"){
             var d = new Date();
             var day = d.getDate();
             var month = d.getMonth() + 1;
             var year = d.getFullYear();
             var hour = d.getHours();
             var minutes = d.getMinutes();
-            var seconds = d.getSeconds();
-            var output = fs.createWriteStream(__dirname + '/' + patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes + '-' + seconds +'.zip');
+            // var seconds = d.getSeconds();
+            var output = fs.createWriteStream(__dirname + '/' + patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes +'.zip');
             var archive = archiver('zip', {
                 zlib: { level: 9 } // Sets the compression level.
             });
@@ -178,6 +181,7 @@ wss.on('connection', function connection(ws) {
             archive.file('data.csv', { name: 'data.csv' });
             archive.finalize();
         } else {
+            console.log(message);
             clients.forEach(function(client) {
                 client.send(message, function ack(error) {
                     // if error is not defined, the send has been completed,
