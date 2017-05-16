@@ -149,7 +149,9 @@ wss.on('connection', function connection(ws) {
             });
         } else if(obj.type == "patient"){
             patientName = obj.name;
-            fs.writeFile('metadata.json', JSON.stringify(obj, null, 4));
+            fs.writeFile('metadata.json', JSON.stringify(obj, null, 4), (err) => {
+              if(err) throw err;
+            });
         } else if(obj.type == "saveZip"){
             var d = new Date();
             var day = d.getDate();
