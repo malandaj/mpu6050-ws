@@ -1,0 +1,64 @@
+doctype html
+html(lang='en')
+    head
+        // These meta tags come first.
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        meta(name='description', content='')
+        meta(name='keywords', content='')
+        meta(name='author', content='Miguel Landa')
+        title Titulo
+        // Include the CSS
+        link(href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic', rel='stylesheet')
+        link(href='css/toolkit.min.css', rel='stylesheet')
+        link(href='css/application.css', rel='stylesheet')
+        link(href='css/nprogress.css', rel='stylesheet')
+        link(href='css/sweetalert2.min.css', rel='stylesheet')
+    body.with-top-navbar
+        nav.navbar.navbar-inverse.navbar-fixed-top
+            .container-fluid.container-fluid-spacious
+                .navbar-header
+                    button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand.navbar-brand-emphasized(href='#')
+                        span.icon.icon-leaf.navbar-brand-icon
+                        |   Dashboard
+                #navbar.navbar-collapse.collapse
+                    ul.nav.navbar-nav
+                        li.active
+                            a(href='#') Real time status
+                        li
+                            a(href='view') Load JSON database
+        .container-fluid.container-fluid-spacious
+            .dashhead.m-t-md
+                .dashhead-titles
+                    h6.dashhead-subtitle Dashboards
+                    h2.dashhead-title Overview
+                .btn-toolbar.dashhead-toolbar
+                    button#btnStartPreview.btn.btn-lg.btn-primary-outline(type='button' onclick='startPreview()') Start preview data
+                    button#btnStartSaving.btn.btn-lg.btn-primary-outline(type='button' onclick='startSaving()') Start saving data
+                    button#btnCalibrate.btn.btn-lg.btn-primary-outline(type='button' onclick='calibrate()') Calibrate sensors
+            .hr-divider.m-t.m-b-md
+                h3.hr-divider-content.hr-divider-heading Quick stats
+            #content.row.text-center.m-t-lg
+                .col-sm-6.m-b-md
+                    h3 Sensor 1
+                    .w-full.m-x-auto
+                    canvas#chart1(style='width:100%; height:200px')
+                .col-sm-6.m-b-md
+                    h3 Sensor 2
+                    .w-full.m-x-auto
+                    canvas#chart2(style='width:100%; height:200px')
+                a#btnExport.btn.btn-lg.btn-primary-outline(role='button' href='sendFile') Download Data
+                a#btnView.btn.btn-lg.btn-primary-outline(role='button' href='view') View Data
+        // Include jQuery (required) and the JS
+        script(src='js/jquery.min.js')
+        script(src='js/toolkit.min.js')
+        script(src='js/smoothie.js')
+        script(src='js/nprogress.js')
+        script(src='js/sweetalert2.min.js')
+        script(src='js/funcioneSmoothie.js')

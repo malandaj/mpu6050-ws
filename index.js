@@ -39,7 +39,7 @@ router.use(function(req, res, next) {
 });
 
 router.get('/', function(req, res) {
-    res.render('index');
+    res.render('indexsmooth');
 });
 
 router.get('/view', function(req, res) {
@@ -120,7 +120,15 @@ wss.on('connection', function connection(ws) {
     });
 
     ws.on('message', function incoming(message) {
-        var obj = JSON.parse(message);
+        var obj;
+        try{
+          obj = JSON.parse(message);
+        } catch(e){
+          console.log(e);
+        }
+        saving = true;
+        db.set('lectures', [])
+            .value();
         if (obj.type == "startRecording") {
             sensors.forEach(function(sensor) {
                 sensor.send("startPreview", function ack(error) {
@@ -128,9 +136,6 @@ wss.on('connection', function connection(ws) {
                     // otherwise the error object will indicate what failed.
                 });
             });
-            saving = true;
-            db.set('lectures', [])
-                .value();
         } else if (obj.type == "stopRecording") {
             sensors.forEach(function(sensor) {
                 sensor.send("stopPreview", function ack(error) {
@@ -168,7 +173,7 @@ wss.on('connection', function connection(ws) {
             // listen for all archive data to be written
             output.on('close', function() {
               console.log(archive.pointer() + ' total bytes');
-              console.log('archiver has been finalized and the output file descriptor has closed.');
+              //console.log('archiver has been finalized and the output file descriptor has closed.');
             });
 
             // good practice to catch this error explicitly
