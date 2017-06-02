@@ -106,104 +106,108 @@ var sensors = [];
 var saving = false;
 var patientName;
 wss.on('connection', function connection(ws) {
-    var location = url.parse(ws.upgradeReq.url, true);
-    if (ws.protocol == "client") {
-        console.log("agregar navegador");
-        clients.push(ws);
-    } else {
-        console.log("agregar esp8266");
-        sensors.push(ws);
+  var location = url.parse(ws.upgradeReq.url, true);
+  if (ws.protocol == "client") {
+    console.log("agregar navegador");
+    clients.push(ws);
+  } else {
+    console.log("agregar esp8266");
+    sensors.push(ws);
+  }
+
+  ws.on('close', function close() {
+    console.log('disconnected');
+  });
+
+  ws.on('message', function incoming(message) {
+    var obj;
+    try{
+      obj = JSON.parse(message);
+      goodJson = true;
+    } catch(e){
+      goodJson = false;
+      console.log('Error parsing JSON package, omiting package');
     }
+    if(goodJson){
+      saving = true;
+      db.set('lectures', [])
+        .value();
+      if (obj.type == "startRecording") {
+        sensors.forEach(function(sensor) {
+          sensor.send("startPreview", function ack(error) {
+              // if error is not defined, the send has been completed,
+              // otherwise the error object will indicate what failed.
+          });
+        });
+      } else if (obj.type == "stopRecording") {
+        sensors.forEach(function(sensor) {
+          sensor.send("stopPreview", function ack(error) {
+              // if error is not defined, the send has been completed,
+              // otherwise the error object will indicate what failed.
+          });
+        });
+        saving = false;
+        processData();
+      } else if (obj.type == "calibrate") {
+        sensors.forEach(function(sensor) {
+          sensor.send(message, function ack(error) {
+              // if error is not defined, the send has been completed,
+              // otherwise the error object will indicate what failed.
+          });
+        });
+      } else if(obj.type == "patient"){
+        patientName = obj.name;
+        fs.writeFile('metadata.json', JSON.stringify(obj, null, 4), (err) => {
+          if(err) throw err;
+        });
+      } else if(obj.type == "saveZip"){
+        var d = new Date();
+        var day = d.getDate();
+        var month = d.getMonth() + 1;
+        var year = d.getFullYear();
+        var hour = d.getHours();
+        var minutes = d.getMinutes();
+        // var seconds = d.getSeconds();
+        var output = fs.createWriteStream(__dirname + '/' + patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes +'.zip');
+        var archive = archiver('zip', {
+            zlib: { level: 9 } // Sets the compression level.
+        });
 
-    ws.on('close', function close() {
-      console.log('disconnected');
-    });
+        // listen for all archive data to be written
+        output.on('close', function() {
+          console.log(archive.pointer() + ' total bytes');
+          //console.log('archiver has been finalized and the output file descriptor has closed.');
+        });
 
-    ws.on('message', function incoming(message) {
-        var obj;
-        try{
-          obj = JSON.parse(message);
-        } catch(e){
-          console.log(e);
-        }
-        saving = true;
-        db.set('lectures', [])
+        // good practice to catch this error explicitly
+        archive.on('error', function(err) {
+          throw err;
+        });
+
+        // pipe archive data to the file
+        archive.pipe(output);
+
+        archive.file('metadata.json', { name: 'metadata.json' });
+        archive.file('data.csv', { name: 'data.csv' });
+        archive.finalize();
+      } else {
+        console.log(message);
+        clients.forEach(function(client) {
+          client.send(message, function ack(error) {
+              // if error is not defined, the send has been completed,
+              // otherwise the error object will indicate what failed.
+          });
+        });
+        if (saving) {
+          db.get('lectures')
+            .push({
+                lectures: message
+            })
             .value();
-        if (obj.type == "startRecording") {
-            sensors.forEach(function(sensor) {
-                sensor.send("startPreview", function ack(error) {
-                    // if error is not defined, the send has been completed,
-                    // otherwise the error object will indicate what failed.
-                });
-            });
-        } else if (obj.type == "stopRecording") {
-            sensors.forEach(function(sensor) {
-                sensor.send("stopPreview", function ack(error) {
-                    // if error is not defined, the send has been completed,
-                    // otherwise the error object will indicate what failed.
-                });
-            });
-            saving = false;
-            processData();
-        } else if (obj.type == "calibrate") {
-            sensors.forEach(function(sensor) {
-                sensor.send(message, function ack(error) {
-                    // if error is not defined, the send has been completed,
-                    // otherwise the error object will indicate what failed.
-                });
-            });
-        } else if(obj.type == "patient"){
-            patientName = obj.name;
-            fs.writeFile('metadata.json', JSON.stringify(obj, null, 4), (err) => {
-              if(err) throw err;
-            });
-        } else if(obj.type == "saveZip"){
-            var d = new Date();
-            var day = d.getDate();
-            var month = d.getMonth() + 1;
-            var year = d.getFullYear();
-            var hour = d.getHours();
-            var minutes = d.getMinutes();
-            // var seconds = d.getSeconds();
-            var output = fs.createWriteStream(__dirname + '/' + patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes +'.zip');
-            var archive = archiver('zip', {
-                zlib: { level: 9 } // Sets the compression level.
-            });
-
-            // listen for all archive data to be written
-            output.on('close', function() {
-              console.log(archive.pointer() + ' total bytes');
-              //console.log('archiver has been finalized and the output file descriptor has closed.');
-            });
-
-            // good practice to catch this error explicitly
-            archive.on('error', function(err) {
-              throw err;
-            });
-
-            // pipe archive data to the file
-            archive.pipe(output);
-
-            archive.file('metadata.json', { name: 'metadata.json' });
-            archive.file('data.csv', { name: 'data.csv' });
-            archive.finalize();
-        } else {
-            console.log(message);
-            clients.forEach(function(client) {
-                client.send(message, function ack(error) {
-                    // if error is not defined, the send has been completed,
-                    // otherwise the error object will indicate what failed.
-                });
-            });
-            if (saving) {
-                db.get('lectures')
-                    .push({
-                        lectures: message
-                    })
-                    .value();
-            }
         }
-    });
+      }
+    }
+  });
 });
 
 //------ server declaration ------//
