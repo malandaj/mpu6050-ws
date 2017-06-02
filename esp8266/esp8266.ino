@@ -69,7 +69,7 @@ void setup() {
         setupMPU();
 
         //Configure ws connection
-        webSocket.begin(ws_server, ws_port, "/", "Sensor4");
+        webSocket.begin(ws_server, ws_port, "/", "Sensor5");
         webSocket.onEvent(webSocketEvent);
 
         vData.clear();
@@ -135,13 +135,13 @@ void setupMPU(){
         Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
   #endif
 
-        //reset offsets
-        accelgyro.setXAccelOffset(0);
-        accelgyro.setYAccelOffset(0);
-        accelgyro.setZAccelOffset(0);
-        accelgyro.setXGyroOffset(0);
-        accelgyro.setYGyroOffset(0);
-        accelgyro.setZGyroOffset(0);
+        //set offsets
+        accelgyro.setXAccelOffset(-5869);
+        accelgyro.setYAccelOffset(-107);
+        accelgyro.setZAccelOffset(2378);
+        accelgyro.setXGyroOffset(57);
+        accelgyro.setYGyroOffset(-11);
+        accelgyro.setZGyroOffset(-44);
 }
 
 
@@ -171,148 +171,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
                 else if(message == "calibrate") {
                         ban = false;
                         state = 0;
-                        calibrate();
                 }
         }
         break;
-        }
-}
-
-void calibrate(){
-        // reset offsets
-        accelgyro.setXAccelOffset(0);
-        accelgyro.setYAccelOffset(0);
-        accelgyro.setZAccelOffset(0);
-        accelgyro.setXGyroOffset(0);
-        accelgyro.setYGyroOffset(0);
-        accelgyro.setZGyroOffset(0);
-
-        while(state != 2) {
-                if (state==0) {
-      #ifdef DEBUG_ON
-                        Serial.println("\nReading sensors for first time...");
-      #endif
-                        meansensors();
-                        state++;
-                        delay(1000);
-                }
-
-                if (state==1) {
-      #ifdef DEBUG_ON
-                        Serial.println("\nCalculating offsets...");
-      #endif
-                        calibration();
-                        state++;
-                        delay(1000);
-                }
-
-                if (state==2) {
-                        meansensors();
-      #ifdef DEBUG_ON
-                        Serial.println("\nFINISHED!");
-                        Serial.print("\nSensor readings with offsets:\t");
-                        Serial.print(mean_ax);
-                        Serial.print("\t");
-                        Serial.print(mean_ay);
-                        Serial.print("\t");
-                        Serial.print(mean_az);
-                        Serial.print("\t");
-                        Serial.print(mean_gx);
-                        Serial.print("\t");
-                        Serial.print(mean_gy);
-                        Serial.print("\t");
-                        Serial.println(mean_gz);
-                        Serial.print("Your offsets:\t");
-                        Serial.print(ax_offset);
-                        Serial.print("\t");
-                        Serial.print(ay_offset);
-                        Serial.print("\t");
-                        Serial.print(az_offset);
-                        Serial.print("\t");
-                        Serial.print(gx_offset);
-                        Serial.print("\t");
-                        Serial.print(gy_offset);
-                        Serial.print("\t");
-                        Serial.println(gz_offset);
-                        Serial.println("\nData is printed as: acelX acelY acelZ giroX giroY giroZ");
-                        Serial.println("Check that your sensor readings are close to 0 0 16384 0 0 0");
-                        Serial.println("If calibration was succesful write down your offsets so you can set them in your projects using something similar to mpu.setXAccelOffset(youroffset)");
-      #endif
-                        webSocket.sendTXT("calibrationComplete");
-                }
-        }
-}
-
-void meansensors(){
-        long i=0,buff_ax=0,buff_ay=0,buff_az=0,buff_gx=0,buff_gy=0,buff_gz=0;
-
-        while (i<(buffersize+101)) {
-                // read raw accel/gyro measurements from device
-                accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-
-                if (i>100 && i<=(buffersize+100)) { //First 100 measures are discarded
-                        buff_ax=buff_ax+ax;
-                        buff_ay=buff_ay+ay;
-                        buff_az=buff_az+az;
-                        buff_gx=buff_gx+gx;
-                        buff_gy=buff_gy+gy;
-                        buff_gz=buff_gz+gz;
-                }
-                if (i==(buffersize+100)) {
-                        mean_ax=buff_ax/buffersize;
-                        mean_ay=buff_ay/buffersize;
-                        mean_az=buff_az/buffersize;
-                        mean_gx=buff_gx/buffersize;
-                        mean_gy=buff_gy/buffersize;
-                        mean_gz=buff_gz/buffersize;
-                }
-                i++;
-                delay(2); //Needed so we don't get repeated measures
-        }
-}
-
-void calibration(){
-        ax_offset=-mean_ax/8;
-        ay_offset=-mean_ay/8;
-        az_offset=(8192-mean_az)/8;
-
-        gx_offset=-mean_gx/4;
-        gy_offset=-mean_gy/4;
-        gz_offset=-mean_gz/4;
-        while (1) {
-                int ready=0;
-                accelgyro.setXAccelOffset(ax_offset);
-                accelgyro.setYAccelOffset(ay_offset);
-                accelgyro.setZAccelOffset(az_offset);
-
-                accelgyro.setXGyroOffset(gx_offset);
-                accelgyro.setYGyroOffset(gy_offset);
-                accelgyro.setZGyroOffset(gz_offset);
-
-                meansensors();
-    #ifdef DEBUG_ON
-                Serial.println("...");
-    #endif
-
-                if (abs(mean_ax)<=acel_deadzone) ready++;
-                else ax_offset=ax_offset-mean_ax/acel_deadzone;
-
-                if (abs(mean_ay)<=acel_deadzone) ready++;
-                else ay_offset=ay_offset-mean_ay/acel_deadzone;
-
-                if (abs(8192-mean_az)<=acel_deadzone) ready++;
-                else az_offset=az_offset+(8192-mean_az)/acel_deadzone;
-
-                if (abs(mean_gx)<=giro_deadzone) ready++;
-                else gx_offset=gx_offset-mean_gx/(giro_deadzone+1);
-
-                if (abs(mean_gy)<=giro_deadzone) ready++;
-                else gy_offset=gy_offset-mean_gy/(giro_deadzone+1);
-
-                if (abs(mean_gz)<=giro_deadzone) ready++;
-                else gz_offset=gz_offset-mean_gz/(giro_deadzone+1);
-
-                if (ready==6) break;
         }
 }
 
