@@ -105,8 +105,8 @@ var sensors = [];
 //save data or show only
 var saving = false;
 var patientName;
-wss.on('connection', function connection(ws) {
-  var location = url.parse(ws.upgradeReq.url, true);
+wss.on('connection', function connection(ws, req) {
+  var location = url.parse(req.url, true);
   if (ws.protocol == "client") {
     console.log("agregar navegador");
     clients.push(ws);
