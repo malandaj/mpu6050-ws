@@ -16,7 +16,7 @@ var server = require('http').createServer(),
 var archiver = require('archiver');
 //const fs = require('fs')
 const low = require('lowdb');
-const fileAsync = require('lowdb/lib/storages/file-async');
+const fileAsync = require('lowdb/lib/file-async');
 
 // Start database using file-async storage
 const db = low();
@@ -24,7 +24,7 @@ const db = low();
 db.defaults({
         lectures: []
     })
-    .write();
+    .value();
 
 // setup express middleware //
 app.use(router);
@@ -60,9 +60,9 @@ function processData() {
     rawData.defaults({
             lectures: []
         })
-        .write();
+        .value();
     rawData.set('lectures', [])
-        .write();
+        .value();
     db.get('lectures')
         .forEach(function(value) {
             var parsed = JSON.parse(value.lectures);
@@ -79,10 +79,10 @@ function processData() {
                         millis: parsed.lectures[(8 * i) + 6],
                         id: parsed.ID
                     })
-                    .write();
+                    .value();
             }
         })
-        .write();
+        .value();
     rawData.write();
     jsonData = rawData.getState();
     var csvData = new CSV(jsonData.lectures, {
@@ -138,7 +138,7 @@ wss.on('connection', function connection(ws, req) {
           });
         });
         db.set('lectures', [])
-          .write();
+          .value();
       } else if (obj.type == "stopRecording") {
         sensors.forEach(function(sensor) {
           sensor.send("stopPreview", function ack(error) {
@@ -168,28 +168,28 @@ wss.on('connection', function connection(ws, req) {
         var hour = d.getHours();
         var minutes = d.getMinutes();
         var seconds = d.getSeconds();
-        // var output = fs.createWriteStream(__dirname + '/' + patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes +'.zip');
-        // var archive = archiver('zip', {
-        //     zlib: { level: 9 } // Sets the compression level.
-        // });
-        //
-        // // listen for all archive data to be written
-        // output.on('close', function() {
-        //   console.log(archive.pointer() + ' total bytes');
-        //   //console.log('archiver has been finalized and the output file descriptor has closed.');
-        // });
-        //
-        // // good practice to catch this error explicitly
-        // archive.on('error', function(err) {
-        //   throw err;
-        // });
-        //
-        // // pipe archive data to the file
-        // archive.pipe(output);
-        //
-        // archive.file('metadata.json', { name: 'metadata.json' });
-        // archive.file('data.csv', { name: 'data.csv' });
-        // archive.finalize();
+        var output = fs.createWriteStream(__dirname + '/' + patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes +'.zip');
+        var archive = archiver('zip', {
+            zlib: { level: 9 } // Sets the compression level.
+        });
+
+        // listen for all archive data to be written
+        output.on('close', function() {
+          console.log(archive.pointer() + ' total bytes');
+          //console.log('archiver has been finalized and the output file descriptor has closed.');
+        });
+
+        // good practice to catch this error explicitly
+        archive.on('error', function(err) {
+          throw err;
+        });
+
+        // pipe archive data to the file
+        archive.pipe(output);
+
+        archive.file('metadata.json', { name: 'metadata.json' });
+        archive.file('data.csv', { name: 'data.csv' });
+        archive.finalize();
       } else {
         console.log(message);
         clients.forEach(function(client) {
@@ -203,7 +203,7 @@ wss.on('connection', function connection(ws, req) {
             .push({
                 lectures: message
             })
-            .write();
+            .value();
         }
       }
     }
