@@ -39,9 +39,7 @@ html(lang='en')
                     h6.dashhead-subtitle Dashboards
                     h2.dashhead-title Overview
                 .btn-toolbar.dashhead-toolbar
-                    button#btnStartPreview.btn.btn-lg.btn-primary-outline(type='button' onclick='startPreview()') Start preview data
-                    button#btnStartSaving.btn.btn-lg.btn-primary-outline(type='button' onclick='startSaving()') Start saving data
-                    button#btnCalibrate.btn.btn-lg.btn-primary-outline(type='button' onclick='calibrate()') Calibrate sensors
+                    button#btnStartSaving.btn.btn-lg.btn-primary-outline(type='button' onclick='startPreview()') Start saving data
             .hr-divider.m-t.m-b-md
                 h3.hr-divider-content.hr-divider-heading Quick stats
             #content.row.text-center.m-t-lg
@@ -62,7 +60,6 @@ html(lang='en')
                     .w-full.m-x-auto
                     canvas#sensor4(style='width:100%; height:200px')
                 a#btnExport.btn.btn-lg.btn-primary-outline(role='button' href='sendFile') Download Data
-                a#btnView.btn.btn-lg.btn-primary-outline(role='button' href='view') View Data
         // Include jQuery (required) and the JS
         script(src='js/jquery.min.js')
         script(src='js/toolkit.min.js')

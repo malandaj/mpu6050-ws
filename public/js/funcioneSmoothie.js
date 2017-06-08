@@ -2,16 +2,12 @@ var banPreview = false;
 var banSave = false;
 var ws;
 var dps = [];
-var nSensors = 4; // Number of sensors
+var nSensors = 1; // Number of sensors
 var nLecPackage = 5; // Number of lectures per JSON package
 var charts = [];
 var calibrated = 0;
 
 window.onload = function() {
-  document.getElementById("btnStartSaving").disabled = true;
-  //document.getElementById("btnExport").disabled = true;
-  //document.getElementById("btnExport").style.visibility = 'hidden';
-
   for(var i = 0; i < nSensors; i++){
     // Initialize an empty TimeSeries for each axis
     dps[i] = [new TimeSeries(), new TimeSeries(), new TimeSeries(), new TimeSeries(), new TimeSeries(), new TimeSeries()];
@@ -49,14 +45,14 @@ function setupWebSocket() {
 function startPreview() {
   banPreview = !banPreview;
   if (banPreview) {
-    $("#btnStartPreview").html('Stop data');
+    $("#btnStartPreview").html('Stop saving data');
     document.getElementById("btnStartSaving").disabled = false;
     var msg = {
       type: "startRecording",
     };
     ws.send(JSON.stringify(msg));
   } else {
-    $("#btnStartPreview").html('Start data');
+    $("#btnStartPreview").html('Start saving data');
     document.getElementById("btnStartSaving").disabled = true;
     var msg = {
       type: "stopRecording",
@@ -76,7 +72,7 @@ var seriesOptions = [
 
 function initPlot(plotID){
   var name = "sensor".concat(plotID + 1);
-  charts[plotID] = new SmoothieChart({responsive: true, millisPerPixel: 30, grid:{millisPerLine:6000,verticalSections:0,borderVisible:false}});
+  charts[plotID] = new SmoothieChart({responsive: true, millisPerPixel: 30, grid:{millisPerLine:6000, verticalSections:0, borderVisible:true, fillStyle:'transparent'}});
   for(var i = 0; i < dps[plotID].length; i++){
     charts[plotID].addTimeSeries(dps[plotID][i], seriesOptions[i]);
   }
