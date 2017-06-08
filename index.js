@@ -130,8 +130,6 @@ wss.on('connection', function connection(ws) {
     }
     if(goodJson){
       saving = true;
-      db.set('lectures', [])
-        .value();
       if (obj.type == "startRecording") {
         sensors.forEach(function(sensor) {
           sensor.send("startPreview", function ack(error) {
@@ -139,6 +137,8 @@ wss.on('connection', function connection(ws) {
               // otherwise the error object will indicate what failed.
           });
         });
+        db.set('lectures', [])
+          .value();
       } else if (obj.type == "stopRecording") {
         sensors.forEach(function(sensor) {
           sensor.send("stopPreview", function ack(error) {
