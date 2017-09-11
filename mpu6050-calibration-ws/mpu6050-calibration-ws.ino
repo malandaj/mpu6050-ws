@@ -8,7 +8,6 @@
 #include "MPU6050.h"
 #include "Wire.h"
 
-#include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
 #include <WebSocketsClient.h>
 
 WebSocketsClient webSocket;
@@ -34,6 +33,8 @@ int ax_offset,ay_offset,az_offset,gx_offset,gy_offset,gz_offset;
 const char* ssid     = "sensor";
 const char* password = "1234567278";
 
+const char* idSensor = "Sensor1";
+
 void setup() {
   Serial.println(115200);
   Serial.println();
@@ -48,7 +49,7 @@ void setup() {
   setupMPU();
 
   //Configure ws connection
-  webSocket.begin(ws_server, ws_port, "/", "Sensor1");
+  webSocket.begin(ws_server, ws_port, "/", idSensor);
   webSocket.onEvent(webSocketEvent);
 }
 

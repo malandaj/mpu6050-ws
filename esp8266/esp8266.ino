@@ -20,8 +20,11 @@ unsigned long cont=1;
 WebSocketsClient webSocket;
 const char* ssid     = "sensor";
 const char* password = "1234567278";
-const char* ws_server = "192.168.0.100";
+const char* ws_server = "192.168.0.101";
 int ws_port = 3000;
+
+const char* idSensor = "Sensor5";
+const char* numSensor = "5";
 
 //flag for sending data
 bool ban = false;
@@ -47,13 +50,6 @@ uint8_t nLect = 5;
 static std::vector<struct SensorData> vData(nLect);
 int counter = 0;
 
-//Variables for calibration
-int mean_ax,mean_ay,mean_az,mean_gx,mean_gy,mean_gz,state=0;
-int buffersize=1000;     //Amount of readings used to average, make it higher to get more precision but sketch will be slower  (default:1000)
-int acel_deadzone=3;     //Acelerometer error allowed, make it lower to get more precision, but sketch may not converge  (default:8)
-int giro_deadzone=1;     //Giro error allowed, make it lower to get more precision, but sketch may not converge  (default:1)
-int ax_offset,ay_offset,az_offset,gx_offset,gy_offset,gz_offset;
-
 void setup() {
         // put your setup code here, to run once:
         Serial.begin(115200);
@@ -69,7 +65,7 @@ void setup() {
         setupMPU();
 
         //Configure ws connection
-        webSocket.begin(ws_server, ws_port, "/", "Sensor5");
+        webSocket.begin(ws_server, ws_port, "/", idSensor);
         webSocket.onEvent(webSocketEvent);
 
         vData.clear();
@@ -136,12 +132,12 @@ void setupMPU(){
   #endif
 
         //set offsets
-        accelgyro.setXAccelOffset(-5869);
-        accelgyro.setYAccelOffset(-107);
-        accelgyro.setZAccelOffset(2378);
-        accelgyro.setXGyroOffset(57);
-        accelgyro.setYGyroOffset(-11);
-        accelgyro.setZGyroOffset(-44);
+        accelgyro.setXAccelOffset(-3573);
+        accelgyro.setYAccelOffset(-2031);
+        accelgyro.setZAccelOffset(2178);
+        accelgyro.setXGyroOffset(96);
+        accelgyro.setYGyroOffset(113);
+        accelgyro.setZGyroOffset(-29);
 }
 
 
@@ -214,7 +210,7 @@ void loop() {
                 previousMillis = currentMillis;
                 if(ban) {
                         accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-                        SensorData data = {"5", ax, ay, az, gx, gy, gz, previousMillis, cont};
+                        SensorData data = {numSensor, ax, ay, az, gx, gy, gz, previousMillis, cont};
                         vData.push_back(data);
                         counter++;
                         cont++;

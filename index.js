@@ -115,6 +115,10 @@ wss.on('connection', function connection(ws, req) {
     sensors.push(ws);
   }
 
+  ws.on('error', function handleError(error){
+    console.log(error);
+  })
+
   ws.on('close', function close() {
     console.log('disconnected');
   });
@@ -148,13 +152,6 @@ wss.on('connection', function connection(ws, req) {
         });
         saving = false;
         processData();
-      } else if (obj.type == "calibrate") {
-        sensors.forEach(function(sensor) {
-          sensor.send(message, function ack(error) {
-              // if error is not defined, the send has been completed,
-              // otherwise the error object will indicate what failed.
-          });
-        });
       } else if(obj.type == "patient"){
         patientName = obj.name;
         fs.writeFile('metadata.json', JSON.stringify(obj, null, 4), (err) => {
