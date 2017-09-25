@@ -165,7 +165,7 @@ wss.on('connection', function connection(ws, req) {
         var hour = d.getHours();
         var minutes = d.getMinutes();
         var seconds = d.getSeconds();
-        var output = fs.createWriteStream(__dirname + '/' + patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes +'.zip');
+        var output = fs.createWriteStream(__dirname + '/' + patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes + '-' + seconds +'.zip');
         var archive = archiver('zip', {
             zlib: { level: 9 } // Sets the compression level.
         });

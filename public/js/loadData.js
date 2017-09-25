@@ -1,4 +1,4 @@
-var nSensors = 2;
+var nSensors = 5;
 window.onload = function() {
     function getDataPointsFromCSV(csv) {
         var dataPoints = csvLines = points = [];
@@ -24,9 +24,11 @@ window.onload = function() {
                     });
                 }
             }
+        var merged = [].concat.apply([], dataPoints);
         return {
             header: headers,
-            data: dataPoints[0].concat(dataPoints[1])
+            //data: dataPoints[0].concat(dataPoints[1])
+            data: merged
         };
     }
 

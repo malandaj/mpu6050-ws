@@ -18,13 +18,13 @@ int16_t gx, gy, gz;
 unsigned long cont=1;
 
 WebSocketsClient webSocket;
-const char* ssid     = "sensor";
+const char* ssid     = "BrokenBrains";
 const char* password = "1234567278";
-const char* ws_server = "192.168.0.101";
+const char* ws_server = "192.168.2.116";
 int ws_port = 3000;
 
-const char* idSensor = "Sensor5";
-const char* numSensor = "5";
+const char* idSensor = "Sensor1";
+const char* numSensor = "1";
 
 //flag for sending data
 bool ban = false;
@@ -166,7 +166,6 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
                         ban = false;
                 else if(message == "calibrate") {
                         ban = false;
-                        state = 0;
                 }
         }
         break;
