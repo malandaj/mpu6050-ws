@@ -101,15 +101,25 @@ function processData() {
 //list of clients and sensors
 var clients = [];
 var sensors = [];
+var android = [];
 
 //save data or show only
 var saving = false;
 var patientName;
 wss.on('connection', function connection(ws, req) {
   var location = url.parse(req.url, true);
-  if (ws.protocol == "client") {
+  if (ws.protocol == "webclient") {
     console.log("agregar navegador");
     clients.push(ws);
+  } else if(ws.protocol == "androidclient"){
+    console.log("agregar celular");
+    android.push(ws);
+    clients.forEach(function(client) {
+      client.send("connected", function ack(error) {
+          // if error is not defined, the send has been completed,
+          // otherwise the error object will indicate what failed.
+      });
+    });
   } else {
     console.log("agregar esp8266");
     sensors.push(ws);
@@ -120,6 +130,12 @@ wss.on('connection', function connection(ws, req) {
   })
 
   ws.on('close', function close() {
+    clients.forEach(function(client) {
+      client.send("disconnected", function ack(error) {
+          // if error is not defined, the send has been completed,
+          // otherwise the error object will indicate what failed.
+      });
+    });
     console.log('disconnected');
   });
 

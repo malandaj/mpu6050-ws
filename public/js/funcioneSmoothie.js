@@ -18,7 +18,7 @@ window.onload = function() {
 
 function setupWebSocket() {
   var host = window.document.location.host.replace(/:.*/, '');
-  ws = new WebSocket('ws://' + host + ':3000', 'client');
+  ws = new WebSocket('ws://' + host + ':3000', 'webclient');
 
   // Log errors
   ws.onerror = function(error) {
@@ -35,8 +35,36 @@ function setupWebSocket() {
           dps[lectures.ID - 1][j].append(new Date().getTime(), lectures.lectures[index]);
         }
       }
-    } catch (e){
-      console.log(e);
+    } catch (exception){
+      if(e.data == "connected"){
+        swal({
+          title: 'Conectado',
+          text: 'Celular se ha conectado',
+          timer: 3000,
+        }).then(
+          function () {},
+          // handling the promise rejection
+          function (dismiss) {
+            if (dismiss === 'timer') {
+              console.log('I was closed by the timer')
+            }
+          }
+        )
+      }else if(e.data == "disconnected"){
+        swal({
+          title: 'Desconectado',
+          text: 'Celular desconectado',
+          timer: 3000,
+        }).then(
+          function () {},
+          // handling the promise rejection
+          function (dismiss) {
+            if (dismiss === 'timer') {
+              console.log('I was closed by the timer')
+            }
+          }
+        )
+      }
     }
   };
 }
