@@ -11,7 +11,8 @@ var server = require('http').createServer(),
     path = require('path'),
     os = require('os'),
     CSV = require('comma-separated-values'),
-    fs = require('fs');
+    fs = require('fs')
+    opn = require('opn');
 
 var archiver = require('archiver');
 //const fs = require('fs')
@@ -239,4 +240,5 @@ function rdy() {
         }
     }
     console.log('Listening on ' + addresses[0] + ':' + server.address().port);
+    opn("http://127.0.0.1:3000");
 }
