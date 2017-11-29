@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "ESP8266 Sketch to read data from a mpu6050 accelerometer/gyroscope and send it to a node.js server using web sockets.",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,5 +27,10 @@
     "pug": "^2.0.0-beta6",
     "url": "^0.11.0",
     "ws": "^3.0.0"
+  },
+  "pkg": {
+    "assets": [
+      "views/*", "public/**/*"
+    ]
   }
 }
