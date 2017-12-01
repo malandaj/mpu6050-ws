@@ -91,17 +91,17 @@ function startPreview() {
 }
 
 var seriesOptions = [
-  { strokeStyle: 'rgba(255, 0, 0, 1)', lineWidth: 1 },
-  { strokeStyle: 'rgba(0, 255, 0, 1)', lineWidth: 1 },
-  { strokeStyle: 'rgba(0, 0, 255, 1)', lineWidth: 1 },
-  { strokeStyle: 'rgba(255, 255, 0, 1)', lineWidth: 1 },
-  { strokeStyle: 'rgba(192, 192, 192, 1)', lineWidth: 1 },
-  { strokeStyle: 'rgba(255, 0, 255, 1)', lineWidth: 1 }
+  { strokeStyle: 'rgba(255, 0, 0, 1)', lineWidth: 3 },
+  { strokeStyle: 'rgba(0, 255, 0, 1)', lineWidth: 3 },
+  { strokeStyle: 'rgba(0, 0, 255, 1)', lineWidth: 3 },
+  { strokeStyle: 'rgba(255, 255, 0, 1)', lineWidth: 3 },
+  { strokeStyle: 'rgba(192, 192, 192, 1)', lineWidth: 3 },
+  { strokeStyle: 'rgba(255, 0, 255, 1)', lineWidth: 3 }
 ];
 
 function initPlot(plotID){
   var name = "sensor".concat(plotID + 1);
-  charts[plotID] = new SmoothieChart({responsive: true, millisPerPixel: 30, grid:{millisPerLine:6000, verticalSections:0, borderVisible:true, fillStyle:'transparent'}});
+  charts[plotID] = new SmoothieChart({responsive: true, millisPerPixel: 100, grid:{millisPerLine:6000, verticalSections:0, borderVisible:true, fillStyle:'transparent'}});
   for(var i = 0; i < dps[plotID].length; i++){
     charts[plotID].addTimeSeries(dps[plotID][i], seriesOptions[i]);
   }
