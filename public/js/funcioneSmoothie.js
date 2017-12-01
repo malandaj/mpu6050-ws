@@ -36,35 +36,36 @@ function setupWebSocket() {
         }
       }
     } catch (exception){
-      if(e.data == "connected"){
-        swal({
-          title: 'Conectado',
-          text: 'Celular se ha conectado',
-          timer: 3000,
-        }).then(
-          function () {},
-          // handling the promise rejection
-          function (dismiss) {
-            if (dismiss === 'timer') {
-              console.log('I was closed by the timer')
-            }
-          }
-        )
-      }else if(e.data == "disconnected"){
-        swal({
-          title: 'Desconectado',
-          text: 'Celular desconectado',
-          timer: 3000,
-        }).then(
-          function () {},
-          // handling the promise rejection
-          function (dismiss) {
-            if (dismiss === 'timer') {
-              console.log('I was closed by the timer')
-            }
-          }
-        )
-      }
+      //TODO
+      // if(e.data == "connected"){
+      //   swal({
+      //     title: 'Conectado',
+      //     text: 'Celular se ha conectado',
+      //     timer: 3000,
+      //   }).then(
+      //     function () {},
+      //     // handling the promise rejection
+      //     function (dismiss) {
+      //       if (dismiss === 'timer') {
+      //         console.log('I was closed by the timer')
+      //       }
+      //     }
+      //   )
+      // }else if(e.data == "disconnected"){
+      //   swal({
+      //     title: 'Desconectado',
+      //     text: 'Celular desconectado',
+      //     timer: 3000,
+      //   }).then(
+      //     function () {},
+      //     // handling the promise rejection
+      //     function (dismiss) {
+      //       if (dismiss === 'timer') {
+      //         console.log('I was closed by the timer')
+      //       }
+      //     }
+      //   )
+      // }
     }
   };
 }

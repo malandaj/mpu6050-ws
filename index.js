@@ -89,7 +89,6 @@ function processData() {
     var csvData = new CSV(jsonData.lectures, {
         header: true
     }).encode();
-    console.log(csvData);
     fs.writeFile('data.csv', csvData, function(err) {
         if (err) {
             return console.log(err);
@@ -122,7 +121,7 @@ wss.on('connection', function connection(ws, req) {
       });
     });
   } else {
-    console.log("agregar esp8266");
+    console.log("agregar sensor");
     sensors.push(ws);
   }
 
@@ -205,7 +204,6 @@ wss.on('connection', function connection(ws, req) {
         archive.file('data.csv', { name: 'data.csv' });
         archive.finalize();
       } else {
-        console.log(message);
         clients.forEach(function(client) {
           client.send(message, function ack(error) {
               // if error is not defined, the send has been completed,
