@@ -50,7 +50,7 @@ router.get('/view', function(req, res) {
 router.get('/sendFile', function(req, res) {
     //processData();
     console.log('send file');
-    res.download(__dirname + '/data.csv', 'data.csv');
+    res.download('data.csv', 'data.csv');
 });
 
 function processData() {
@@ -182,7 +182,7 @@ wss.on('connection', function connection(ws, req) {
         var hour = d.getHours();
         var minutes = d.getMinutes();
         var seconds = d.getSeconds();
-        var output = fs.createWriteStream(__dirname + '/' + patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes + '-' + seconds +'.zip');
+        var output = fs.createWriteStream(patientName + '-' + obj.name + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes + '-' + seconds +'.zip');
         var archive = archiver('zip', {
             zlib: { level: 9 } // Sets the compression level.
         });
