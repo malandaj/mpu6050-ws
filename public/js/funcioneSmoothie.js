@@ -101,7 +101,7 @@ var seriesOptions = [
 
 function initPlot(plotID){
   var name = "sensor".concat(plotID + 1);
-  charts[plotID] = new SmoothieChart({responsive: true, millisPerPixel: 100, grid:{millisPerLine:6000, verticalSections:0, borderVisible:true, fillStyle:'transparent'}});
+  charts[plotID] = new SmoothieChart({responsive: true, millisPerPixel: 100, grid:{strokeStyle:'rgba(119,119,119,0.1)', millisPerLine:6000, verticalSections:0, borderVisible:true, fillStyle:'transparent'}});
   for(var i = 0; i < dps[plotID].length; i++){
     charts[plotID].addTimeSeries(dps[plotID][i], seriesOptions[i]);
   }
