@@ -10,7 +10,7 @@
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-//#define DEBUG_ON
+#define DEBUG_ON
 
 MPU6050 accelgyro;
 int16_t ax, ay, az;
@@ -18,9 +18,13 @@ int16_t gx, gy, gz;
 unsigned long cont=1;
 
 WebSocketsClient webSocket;
-const char* ssid     = "BrokenBrains";
+//const char* ssid     = "pelas2";
+//const char* password = "5875CC58yUkbK256";
+//const char* ws_server = "192.168.100.7";
+
+const char* ssid     = "sensor";
 const char* password = "1234567278";
-const char* ws_server = "192.168.2.116";
+const char* ws_server = "192.168.0.101";
 int ws_port = 3000;
 
 const char* idSensor = "Sensor1";
@@ -132,12 +136,12 @@ void setupMPU(){
   #endif
 
         //set offsets
-        accelgyro.setXAccelOffset(-3573);
-        accelgyro.setYAccelOffset(-2031);
-        accelgyro.setZAccelOffset(2178);
-        accelgyro.setXGyroOffset(96);
-        accelgyro.setYGyroOffset(113);
-        accelgyro.setZGyroOffset(-29);
+        accelgyro.setXAccelOffset(-387);
+        accelgyro.setYAccelOffset(-2592);
+        accelgyro.setZAccelOffset(1686);
+        accelgyro.setXGyroOffset(-78);
+        accelgyro.setYGyroOffset(24);
+        accelgyro.setZGyroOffset(81);
 }
 
 
