@@ -28,11 +28,18 @@ function setupWebSocket() {
   // Log messages from the server
   ws.onmessage = function(e) {
     try {
-      var lectures = JSON.parse(e.data);
-      for (i = 0; i < nLecPackage; i++) {
-        for (j = 0; j < 6; j++) {
-          var index = (8 * i) + j;
-          dps[lectures.ID - 1][j].append(new Date().getTime(), lectures.lectures[index]);
+      if(e.data == "disconnected_error"){
+        var sound = new Howl({
+          src: ['audio.mp3']
+        });
+        sound.play();
+      }else{
+        var lectures = JSON.parse(e.data);
+        for (i = 0; i < nLecPackage; i++) {
+          for (j = 0; j < 6; j++) {
+            var index = (8 * i) + j;
+            dps[lectures.ID - 1][j].append(new Date().getTime(), lectures.lectures[index]);
+          }
         }
       }
     } catch (exception){

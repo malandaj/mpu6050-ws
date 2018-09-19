@@ -100,6 +100,13 @@ function processData() {
 
 //------ web sockets ------//
 //list of clients and sensors
+function heartbeat() {
+  console.log('Heartbeat')
+  this.isAlive = true
+}
+
+function noop() {}
+
 var clients = [];
 var sensors = [];
 var android = [];
@@ -124,8 +131,30 @@ wss.on('connection', function connection(ws, req) {
     });
   } else {
     console.log("agregar sensor");
+    ws.isAlive = true;
     sensors.push(ws);
+    ws.on('pong', heartbeat);
   }
+
+  const interval = setInterval(function ping() {
+    sensors.forEach(function each(sensor) {
+      if (sensor.isAlive === false) {
+        clients.forEach(function(client) {
+          client.send("disconnected_error", function ack(error) {
+              // if error is not defined, the send has been completed,
+              // otherwise the error object will indicate what failed.
+          });
+        });
+        var index = sensors.indexOf(sensor)
+        if(index > -1){
+          sensors.splice(index, 1);
+        }
+        return sensor.terminate();
+      }
+      sensor.isAlive = false
+      sensor.ping(noop);
+    });
+  }, 3000);
 
   ws.on('error', function handleError(error){
     console.log(error);
@@ -213,6 +242,11 @@ wss.on('connection', function connection(ws, req) {
               // otherwise the error object will indicate what failed.
           });
         });
+        android.forEach(function(device){
+          device.send(message, function ack(error){
+            //TODO
+          })
+        })
         if (saving) {
           db.get('lectures')
             .push({

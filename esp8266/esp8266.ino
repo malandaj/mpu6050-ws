@@ -10,7 +10,11 @@
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-#define DEBUG_ON
+//#define DEBUG_ON
+
+extern "C" {
+  #include "user_interface.h"
+}
 
 MPU6050 accelgyro;
 int16_t ax, ay, az;
@@ -71,6 +75,7 @@ void setup() {
         //Configure ws connection
         webSocket.begin(ws_server, ws_port, "/", idSensor);
         webSocket.onEvent(webSocketEvent);
+//        Serial.setDebugOutput(true);
 
         vData.clear();
 }
@@ -104,6 +109,7 @@ void setupOTA(){
 }
 
 void setupWiFi(){
+        wifi_set_sleep_type(NONE_SLEEP_T);
         WiFi.mode(WIFI_STA);
         WiFi.begin(ssid, password);
         while (WiFi.status() != WL_CONNECTED) {
@@ -136,12 +142,12 @@ void setupMPU(){
   #endif
 
         //set offsets
-        accelgyro.setXAccelOffset(-387);
-        accelgyro.setYAccelOffset(-2592);
-        accelgyro.setZAccelOffset(1686);
-        accelgyro.setXGyroOffset(-78);
-        accelgyro.setYGyroOffset(24);
-        accelgyro.setZGyroOffset(81);
+        accelgyro.setXAccelOffset(34);
+        accelgyro.setYAccelOffset(10);
+        accelgyro.setZAccelOffset(1094);
+        accelgyro.setXGyroOffset(40);
+        accelgyro.setYGyroOffset(13);
+        accelgyro.setZGyroOffset(-29);
 }
 
 
