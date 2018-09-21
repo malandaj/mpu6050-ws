@@ -1,3 +1,5 @@
+// Uploading using Debug All, lwIP v2 high bandwidth, 160MHz
+
 #include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
 #include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
 #include <WebSocketsClient.h>
@@ -22,17 +24,17 @@ int16_t gx, gy, gz;
 unsigned long cont=1;
 
 WebSocketsClient webSocket;
-//const char* ssid     = "pelas2";
-//const char* password = "5875CC58yUkbK256";
-//const char* ws_server = "192.168.100.7";
+//const char* ssid     = "BrokenBrains";
+//const char* password = "1234567278";
+//const char* ws_server = "192.168.2.116";
 
 const char* ssid     = "sensor";
 const char* password = "1234567278";
 const char* ws_server = "192.168.0.101";
 int ws_port = 3000;
 
-const char* idSensor = "Sensor1";
-const char* numSensor = "1";
+const char* idSensor = "Sensor5";
+const char* numSensor = "5";
 
 //flag for sending data
 bool ban = false;
@@ -142,11 +144,11 @@ void setupMPU(){
   #endif
 
         //set offsets
-        accelgyro.setXAccelOffset(34);
-        accelgyro.setYAccelOffset(10);
-        accelgyro.setZAccelOffset(1094);
-        accelgyro.setXGyroOffset(40);
-        accelgyro.setYGyroOffset(13);
+        accelgyro.setXAccelOffset(-3573);
+        accelgyro.setYAccelOffset(-2031);
+        accelgyro.setZAccelOffset(2178);
+        accelgyro.setXGyroOffset(96);
+        accelgyro.setYGyroOffset(113);
         accelgyro.setZGyroOffset(-29);
 }
 

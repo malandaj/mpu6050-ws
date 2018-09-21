@@ -11,7 +11,7 @@
 #include <WebSocketsClient.h>
 
 WebSocketsClient webSocket;
-const char* ws_server = "192.168.0.100";
+const char* ws_server = "192.168.0.101";
 int ws_port = 3000;
 
 //flag for sending data
@@ -33,7 +33,7 @@ int ax_offset,ay_offset,az_offset,gx_offset,gy_offset,gz_offset;
 const char* ssid     = "sensor";
 const char* password = "1234567278";
 
-const char* idSensor = "Sensor1";
+const char* idSensor = "Sensor3";
 
 void setup() {
   Serial.println(115200);
@@ -61,21 +61,11 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
     break;
     case WStype_CONNECTED: {
       Serial.println("[WSc] Connected");
-      calibrate();
     }
     break;
       case WStype_TEXT: {
         String message = (char * )payload;
-        Serial.println(message);
-        if(message == "startPreview")
-          ban = true;
-        else if(message == "stopPreview")
-          ban = false;
-        else if(message == "calibrate") {
-          ban = false;
-          state = 0;
-          calibrate();
-        }
+        calibrate();
       }
     break;
   }

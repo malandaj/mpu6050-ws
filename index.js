@@ -100,13 +100,6 @@ function processData() {
 
 //------ web sockets ------//
 //list of clients and sensors
-function heartbeat() {
-  console.log('Heartbeat')
-  this.isAlive = true
-}
-
-function noop() {}
-
 var clients = [];
 var sensors = [];
 var android = [];
@@ -132,29 +125,9 @@ wss.on('connection', function connection(ws, req) {
   } else {
     console.log("agregar sensor");
     ws.isAlive = true;
-    sensors.push(ws);
     ws.on('pong', heartbeat);
+    sensors.push(ws);
   }
-
-  const interval = setInterval(function ping() {
-    sensors.forEach(function each(sensor) {
-      if (sensor.isAlive === false) {
-        clients.forEach(function(client) {
-          client.send("disconnected_error", function ack(error) {
-              // if error is not defined, the send has been completed,
-              // otherwise the error object will indicate what failed.
-          });
-        });
-        var index = sensors.indexOf(sensor)
-        if(index > -1){
-          sensors.splice(index, 1);
-        }
-        return sensor.terminate();
-      }
-      sensor.isAlive = false
-      sensor.ping(noop);
-    });
-  }, 3000);
 
   ws.on('error', function handleError(error){
     console.log(error);
@@ -172,6 +145,7 @@ wss.on('connection', function connection(ws, req) {
 
   ws.on('message', function incoming(message) {
     var obj;
+    console.log(message);
     try{
       obj = JSON.parse(message);
       goodJson = true;
@@ -258,6 +232,34 @@ wss.on('connection', function connection(ws, req) {
     }
   });
 });
+
+const interval = setInterval(function ping() {
+  sensors.forEach(function each(sensor) {
+    if (sensor.isAlive === false) {
+      console.log('unexpected disconnection of ' + sensor.protocol);
+      clients.forEach(function(client) {
+        client.send("disconnected_error", function ack(error) {
+            // if error is not defined, the send has been completed,
+            // otherwise the error object will indicate what failed.
+        });
+      });
+      var index = sensors.indexOf(sensor)
+      if(index > -1){
+        sensors.splice(index, 1);
+      }
+      return sensor.terminate();
+    }
+    sensor.isAlive = false
+    sensor.ping(noop);
+  });
+}, 5000);
+
+function heartbeat() {
+  console.log(this.protocol + ' heartbeat')
+  this.isAlive = true
+}
+
+function noop() {}
 
 //------ server declaration ------//
 server.on('request', app);
