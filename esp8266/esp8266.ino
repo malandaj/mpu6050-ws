@@ -1,4 +1,4 @@
-// Uploading using Debug All, lwIP v2 high bandwidth, 160MHz
+// Uploading using lwIP v2 high bandwidth, 160MHz
 
 #include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
 #include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
@@ -174,8 +174,12 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t lenght) {
       #endif
                 if(message == "startPreview")
                         ban = true;
-                else if(message == "stopPreview")
+                else if(message == "stopPreview"){
+                        vData.clear();
+                        counter=0;
+                        cont = 1;
                         ban = false;
+                }
                 else if(message == "calibrate") {
                         ban = false;
                 }
@@ -219,15 +223,15 @@ void loop() {
         unsigned long currentMillis = millis();
         if(currentMillis - previousMillis >= interval) {
                 previousMillis = currentMillis;
+                accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+                SensorData data = {numSensor, ax, ay, az, gx, gy, gz, previousMillis, cont};
                 if(ban) {
-                        accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-                        SensorData data = {numSensor, ax, ay, az, gx, gy, gz, previousMillis, cont};
                         vData.push_back(data);
                         counter++;
                         cont++;
-                        if(counter==nLect) {
-                                sendData();
-                        }
                 }
+        }
+        if(counter==nLect) {
+                sendData();
         }
 }
