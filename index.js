@@ -56,44 +56,46 @@ router.get('/sendFile', function(req, res) {
 });
 
 function processData() {
-    const adapter = new FileSync('db.json')
-    const fileDB = low(adapter)
-    fileDB.defaults({
-      lectures: []
-    }).write()
-    fileDB.set('lectures', []).write()
-    db.get('lectures')
-        .forEach(function(value) {
-            var parsed = JSON.parse(value.lectures);
-            for (i = 0; i < 5; i++) {
-                fileDB.get('lectures')
-                    .push({
-                        cont: parsed.lectures[(8 * i) + 7],
-                        accX: parsed.lectures[(8 * i) + 0],
-                        accY: parsed.lectures[(8 * i) + 1],
-                        accZ: parsed.lectures[(8 * i) + 2],
-                        gyroX: parsed.lectures[(8 * i) + 3],
-                        gyroY: parsed.lectures[(8 * i) + 4],
-                        gyroZ: parsed.lectures[(8 * i) + 5],
-                        millis: parsed.lectures[(8 * i) + 6],
-                        id: parsed.ID
-                    })
-                    .write();
+    const adapter = new FileAsync('db.json')
+    low(adapter)
+      .then(fileDB => {
+        fileDB.defaults({
+          lectures: []
+        }).write()
+        fileDB.set('lectures', []).value()
+        db.get('lectures')
+          .forEach(function(lecture){
+            var parsed = JSON.parse(lecture.lectures);
+            for (i = 0; i < 5; i++){
+              fileDB.get('lectures')
+                .push({
+                    cont: parsed.lectures[(8 * i) + 7],
+                    accX: parsed.lectures[(8 * i) + 0],
+                    accY: parsed.lectures[(8 * i) + 1],
+                    accZ: parsed.lectures[(8 * i) + 2],
+                    gyroX: parsed.lectures[(8 * i) + 3],
+                    gyroY: parsed.lectures[(8 * i) + 4],
+                    gyroZ: parsed.lectures[(8 * i) + 5],
+                    millis: parsed.lectures[(8 * i) + 6],
+                    id: parsed.ID
+                })
+                .value();
             }
-        })
-        .value();
-    fileDB.write();
-    jsonData = fileDB.getState();
-    var csvData = new CSV(jsonData.lectures, {
-        header: true
-    }).encode();
-    fs.writeFile('data.csv', csvData, function(err) {
-        if (err) {
-            return console.log(err);
-        }
-        console.log("the file was saved");
-        saveZip()
-    });
+          })
+          .value()
+        fileDB.write();
+        jsonData = fileDB.getState();
+        var csvData = new CSV(jsonData.lectures, {
+            header: true
+        }).encode();
+        fs.writeFile('data.csv', csvData, function(err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("the file was saved");
+            saveZip()
+        });
+      })
 }
 
 //------ web sockets ------//
@@ -108,7 +110,6 @@ var patientName;
 var currentTest;
 wss.on('connection', function connection(ws, req) {
   var location = url.parse(req.url, true);
-  console.log(ws.protocol);
   if (ws.protocol == "webclient") {
     console.log("agregar navegador");
     clients.push(ws);
@@ -144,7 +145,6 @@ wss.on('connection', function connection(ws, req) {
 
   ws.on('message', function incoming(message) {
     var obj;
-    console.log(message);
     try{
       obj = JSON.parse(message);
       goodJson = true;
@@ -153,7 +153,6 @@ wss.on('connection', function connection(ws, req) {
       console.log('Error parsing JSON package, omiting package');
     }
     if(goodJson){
-      console.log(obj);
       saving = true;
       if (obj.type == "startRecording") {
         sensors.forEach(function(sensor) {
@@ -171,7 +170,6 @@ wss.on('connection', function connection(ws, req) {
           });
         });
         saving = false;
-        console.log(obj.name);
         currentTest = obj.name
         processData();
       } else if(obj.type == "patient"){
@@ -213,7 +211,7 @@ function saveZip(){
   var seconds = d.getSeconds();
   var output = fs.createWriteStream(patientName + '-' + currentTest + '_' + day + '-' + month + '-' + year + '_' + hour + '-' + minutes + '-' + seconds +'.zip');
   var archive = archiver('zip', {
-      zlib: { level: 9 } // Sets the compression level.
+      zlib: { level: 1 } // Sets the compression level.
   });
 
   // listen for all archive data to be written
