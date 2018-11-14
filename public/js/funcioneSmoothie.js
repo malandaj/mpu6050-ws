@@ -18,7 +18,7 @@ window.onload = function() {
 
 function setupWebSocket() {
   var host = window.document.location.host.replace(/:.*/, '');
-  ws = new WebSocket('ws://' + host + ':3000', 'webclient');
+  ws = new WebSocket('wss://' + host + ':3000', 'webclient');
 
   // Log errors
   ws.onerror = function(error) {

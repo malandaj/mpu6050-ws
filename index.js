@@ -1,18 +1,29 @@
-var server = require('http').createServer(),
-    url = require('url'),
-    WebSocketServer = require('ws').Server,
-    wss = new WebSocketServer({
-        server: server
-    }),
-    express = require('express'),
-    app = express(),
-    router = express.Router(),
-    port = 3000,
-    path = require('path'),
-    os = require('os'),
-    CSV = require('comma-separated-values'),
-    fs = require('fs')
-    opn = require('opn');
+const fs = require('fs')
+const https = require('https')
+// const server = http.createServer()
+const server = new https.createServer({
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.cert')
+})
+const url = require('url')
+
+// const WebSocketServer = require('ws').Server
+// const wss = new WebSocketServer({
+//   server: server
+// })
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({
+  server: server
+})
+
+const express = require('express')
+const app = express()
+const router = express.Router()
+const port = 3000
+const path = require('path')
+const os = require('os')
+const CSV = require('comma-separated-values')
+const opn = require('opn');
 
 var archiver = require('archiver');
 //const fs = require('fs')
@@ -110,6 +121,7 @@ var patientName;
 var currentTest;
 wss.on('connection', function connection(ws, req) {
   var location = url.parse(req.url, true);
+  // console.log(ws);
   if (ws.protocol == "webclient") {
     console.log("agregar navegador");
     clients.push(ws);
@@ -277,5 +289,5 @@ function rdy() {
         }
     }
     console.log('Listening on ' + addresses[0] + ':' + server.address().port);
-    opn("http://127.0.0.1:3000");
+    opn("https://127.0.0.1:3000");
 }

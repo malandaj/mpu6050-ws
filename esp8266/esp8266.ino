@@ -12,7 +12,10 @@
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-//#define DEBUG_ON
+#define DEBUG_ON
+
+#include <Arduino.h>
+#include <Hash.h>
 
 extern "C" {
   #include "user_interface.h"
@@ -33,8 +36,8 @@ const char* password = "1234567278";
 const char* ws_server = "192.168.0.101";
 int ws_port = 3000;
 
-const char* idSensor = "Sensor5";
-const char* numSensor = "5";
+const char* idSensor = "Sensor1";
+const char* numSensor = "1";
 
 //flag for sending data
 bool ban = false;
@@ -75,9 +78,9 @@ void setup() {
         setupMPU();
 
         //Configure ws connection
-        webSocket.begin(ws_server, ws_port, "/", idSensor);
+        webSocket.beginSSL(ws_server, ws_port);
         webSocket.onEvent(webSocketEvent);
-//        Serial.setDebugOutput(true);
+        Serial.setDebugOutput(true);
 
         vData.clear();
 }
