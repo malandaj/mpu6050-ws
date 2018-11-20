@@ -147,12 +147,12 @@ void setupMPU(){
   #endif
 
         //set offsets
-        accelgyro.setXAccelOffset(-3573);
-        accelgyro.setYAccelOffset(-2031);
-        accelgyro.setZAccelOffset(2178);
-        accelgyro.setXGyroOffset(96);
-        accelgyro.setYGyroOffset(113);
-        accelgyro.setZGyroOffset(-29);
+        accelgyro.setXAccelOffset(-387);
+        accelgyro.setYAccelOffset(-2592);
+        accelgyro.setZAccelOffset(1686);
+        accelgyro.setXGyroOffset(-78);
+        accelgyro.setYGyroOffset(24);
+        accelgyro.setZGyroOffset(81);
 }
 
 

@@ -3,7 +3,7 @@ const https = require('https')
 // const server = http.createServer()
 const server = new https.createServer({
   key: fs.readFileSync('server.key'),
-  cert: fs.readFileSync('server.cert')
+  cert: fs.readFileSync('server.crt')
 })
 const url = require('url')
 
